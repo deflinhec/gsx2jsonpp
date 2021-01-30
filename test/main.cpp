@@ -108,6 +108,4 @@ TEST_F(ParserTests, ToJson)
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
 	ASSERT_FALSE(content.timestamp.empty());
 	ASSERT_FALSE(content.payload.empty());
-	auto object = json::parse(content.payload);
-	std::cout << object.dump(4) << std::endl;
 }
