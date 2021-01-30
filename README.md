@@ -25,7 +25,7 @@ https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit#gid=[SHEET_NUMBER]
 
 ![](https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step04.png)
 
-You can then access your readable JSON API using the `/api` endpoint. You can change this in app.js.
+You can then access your readable JSON API using the `/api` endpoint.
 
 ```
 http://example.com/api?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
