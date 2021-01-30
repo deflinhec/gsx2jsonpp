@@ -29,6 +29,12 @@
 namespace Gxs2Json
 {
 
+struct Identifier
+{
+	std::string id;
+	unsigned int sheet = 0;
+};
+
 struct Config
 {
 	std::string query;
@@ -36,6 +42,8 @@ struct Config
 	bool showRows = true;
 	bool showColumns = true;
 };
+
+void parse(const std::string& _uri, Config* _cfg, Identifier* _id = nullptr);
 
 struct Content
 {

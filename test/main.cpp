@@ -21,12 +21,12 @@
  */
 
 #include <gtest/gtest.h>
-#include <uriparser/Uri.h>
 #include <nlohmann/json.hpp>
 #include <httplib.h>
 #include "gxs2json.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
+#define GSX2JSON_URI_FORMAT "/api?id=%s&sheet=%d&columns=false"
 #define SPREADSHEET_URI_FORMAT "/feeds/list/%s/%d/public/values?alt=json"
 using namespace httplib;
 using namespace nlohmann;
@@ -62,6 +62,21 @@ TEST(Client, GoogleSpreadSheet)
 	EXPECT_EQ(res->status, 200);
 	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
 	ASSERT_FALSE(res->body.empty());
+}
+
+TEST(URI, Parse)
+{
+	char url[BUFSIZ] = {0};
+	snprintf(url, sizeof(url), GSX2JSON_URI_FORMAT, SpreadsheetID, 1);
+	using namespace Gxs2Json;
+	Config config; Identifier id;
+	EXPECT_NO_THROW(parse(url, &config, &id));
+	ASSERT_TRUE(config.query.empty());
+	ASSERT_FALSE(config.showColumns);
+	ASSERT_TRUE(config.useInteger);
+	ASSERT_TRUE(config.showRows);
+	ASSERT_STREQ(id.id.c_str(), SpreadsheetID);
+	ASSERT_EQ(id.sheet, 1);
 }
 
 class ParserTests: public ::testing::Test

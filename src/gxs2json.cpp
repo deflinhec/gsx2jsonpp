@@ -7,6 +7,7 @@
 
 #include "gxs2json.h"
 #include <iostream>
+#include <uriparser/Uri.h>
 #include <nlohmann/json.hpp>
 #include <exception>
 
@@ -14,6 +15,51 @@ using namespace nlohmann;
 
 namespace Gxs2Json
 {
+void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
+{
+	UriUriA uri;
+	const char* error = nullptr;
+	if (uriParseSingleUriA(&uri, _uri.c_str(), &error) != URI_SUCCESS)
+	{
+		throw std::invalid_argument("uriParseSingleUriA failed");
+	}
+	int count = 0;
+	UriQueryListA* list = nullptr;
+	if (uriDissectQueryMallocA(&list, &count, uri.query.first, uri.query.afterLast) != URI_SUCCESS)
+	{
+		throw std::invalid_argument("uriDissectQueryMallocA failed");
+	}
+	for (auto query = list; query; query = query->next)
+	{
+		if (_id && std::strcmp(query->key, "id") == 0)
+		{
+			_id->id = query->value;
+		}
+		else if (_id && std::strcmp(query->key, "sheet") == 0)
+		{
+			_id->sheet = std::stoi(query->value);
+		}
+		else if (_cfg && std::strcmp(query->key, "integers") == 0)
+		{
+			_cfg->useInteger = std::strcmp(query->key, "true") == 0;
+		}
+		else if (_cfg && std::strcmp(query->key, "rows") == 0)
+		{
+			_cfg->showRows = std::strcmp(query->key, "true") == 0;
+		}
+		else if (_cfg && std::strcmp(query->key, "columns") == 0)
+		{
+			_cfg->showColumns = std::strcmp(query->key, "true") == 0;
+		}
+		else if (_cfg && std::strcmp(query->key, "q") == 0)
+		{
+			_cfg->query = query->value;
+		}
+		std::cout << query->key << ":" << query->value << std::endl;
+	}
+	uriFreeQueryListA(list);
+}
+	
 void parse(Content* _content, const std::string& _json, Config _cfg)
 {
 	json object, rows, columns;
