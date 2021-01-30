@@ -26,6 +26,7 @@
 #include <httplib.h>
 #include <cxxopts.hpp>
 #include <uriparser/Uri.h>
+#include "gxs2json.h"
 
 #define SERVER_CERT_FILE "./cert.pem"
 #define SERVER_PRIVATE_KEY_FILE "./key.pem"
@@ -183,6 +184,45 @@ int main(int argc, char *argv[])
 	
 	srv.Get("/hi", [](const Request & /*req*/, Response &res) {
 		res.set_content("Hello World!\n", "text/plain");
+	});
+	
+	srv.Get("/api", [](const Request & req, Response &res) {
+		using namespace Gxs2Json;
+		Config config; Identifier id;
+		try {
+			parse(req.target, &config, &id);
+		}
+		catch (const std::exception& e) {
+			res.set_content(e.what(), "text/plain");
+		}
+		Client cli(SPREADSHEET_HOST);
+		char buf[BUFSIZ];
+		snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
+		if (auto cli_res = cli.Get(buf))
+		{
+			if (cli_res->status == 200)
+			{
+				Content content;
+				try {
+					parse(&content, cli_res->body, config);
+					res.set_content(content.payload, "text/plain");
+				}
+				catch (const std::exception& e)
+				{
+					res.set_content(e.what(), "text/plain");
+				}
+			}
+			else
+			{
+				snprintf(buf, sizeof(buf), "%d", res.status);
+				res.set_content(buf, "text/plain");
+			}
+		}
+		else
+		{
+			snprintf(buf, sizeof(buf), "%d", res.status);
+			res.set_content(buf, "text/plain");
+		}
 	});
 	
 	srv.set_error_handler([](const Request & /*req*/, Response &res) {
