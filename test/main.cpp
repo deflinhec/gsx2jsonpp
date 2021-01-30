@@ -26,7 +26,6 @@
 #include "gxs2json.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
-#define GSX2JSON_URI_FORMAT "/api?id=%s&sheet=%d&columns=false&rows=false"
 using namespace httplib;
 using namespace nlohmann;
 
@@ -62,20 +61,90 @@ TEST(Client, GoogleSpreadSheet)
 	ASSERT_FALSE(res->body.empty());
 }
 
-TEST(URI, Parse)
+TEST(URI, ParseIdentifier)
 {
 	char url[BUFSIZ] = {0};
-	snprintf(url, sizeof(url), GSX2JSON_URI_FORMAT, SpreadsheetID, 1);
-	using namespace Gxs2Json;
-	Config config; Identifier id;
-	EXPECT_NO_THROW(parse(url, &config, &id));
-	EXPECT_TRUE(config.query.empty());
-	EXPECT_FALSE(config.showColumns);
-	EXPECT_TRUE(config.useInteger);
-	EXPECT_FALSE(config.showRows);
-	EXPECT_TRUE(config.showDict);
+	const char* fmt = "/api?id=%s&sheet=%d";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	using namespace Gxs2Json; Identifier id;
+	EXPECT_EQ(id.sheet, 0);
+	EXPECT_TRUE(id.id.empty());
+	EXPECT_NO_THROW(parse(url, nullptr, &id));
 	EXPECT_STREQ(id.id.c_str(), SpreadsheetID);
 	EXPECT_EQ(id.sheet, 1);
+}
+
+TEST(URI, ParseConfigShowColumns)
+{
+	char url[BUFSIZ] = {0};
+	const char* fmt = "/api?columns=false";
+	snprintf(url, sizeof(url), fmt, "");
+	using namespace Gxs2Json; Config config;
+	EXPECT_TRUE(config.showColumns);
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_FALSE(config.showColumns);
+}
+
+TEST(URI, ParseConfigShowRows)
+{
+	const char* url = "/api?rows=false";
+	using namespace Gxs2Json; Config config;
+	EXPECT_TRUE(config.showRows);
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_FALSE(config.showRows);
+}
+
+TEST(URI, ParseConfigShowDict)
+{
+	const char* url = "/api?dict=false";
+	using namespace Gxs2Json; Config config;
+	EXPECT_TRUE(config.showDict);
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_FALSE(config.showDict);
+}
+
+TEST(URI, ParseConfigUseInteger)
+{
+	const char* url = "/api?integers=false";
+	using namespace Gxs2Json; Config config;
+	EXPECT_TRUE(config.useInteger);
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_FALSE(config.useInteger);
+}
+
+TEST(URI, ParseConfigQuerySearch)
+{
+	const char* url = "/api?q=aabb";
+	using namespace Gxs2Json; Config config;
+	EXPECT_TRUE(config.query.empty());
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_STREQ(config.query.c_str(), "aabb");
+}
+
+TEST(URI, ParseCompondQueries)
+{
+	char url[BUFSIZ] = {0};
+	const char* fmt =
+	"/api?q=aabb&integers=false&dict=false"
+	"&columns=false&rows=false&id=%s&sheet=%d";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	using namespace Gxs2Json;
+	Config config; Identifier id;
+	EXPECT_EQ(id.sheet, 0);
+	EXPECT_TRUE(id.id.empty());
+	EXPECT_TRUE(config.showDict);
+	EXPECT_TRUE(config.showRows);
+	EXPECT_TRUE(config.showColumns);
+	EXPECT_TRUE(config.useInteger);
+	EXPECT_TRUE(config.query.empty());
+	EXPECT_NO_THROW(parse(url, &config, &id));
+	EXPECT_EQ(id.sheet, 1);
+	EXPECT_STREQ(id.id.c_str(), SpreadsheetID);
+	EXPECT_FALSE(config.showDict);
+	EXPECT_FALSE(config.showRows);
+	EXPECT_FALSE(config.showColumns);
+	EXPECT_FALSE(config.useInteger);
+	EXPECT_STREQ(config.query.c_str(), "aabb");
 }
 
 class ParserTests: public ::testing::Test
