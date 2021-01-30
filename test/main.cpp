@@ -23,7 +23,7 @@
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 #include <httplib.h>
-#include "gxs2json.h"
+#include "gsx2json.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
 using namespace httplib;

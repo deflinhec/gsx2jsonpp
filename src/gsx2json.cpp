@@ -20,7 +20,7 @@
 * IN THE SOFTWARE.
 */
 
-#include "gxs2json.h"
+#include "gsx2json.h"
 #include <iostream>
 #include <uriparser/Uri.h>
 #include <nlohmann/json.hpp>

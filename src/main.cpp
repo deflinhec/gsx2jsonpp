@@ -26,7 +26,7 @@
 #include <httplib.h>
 #include <cxxopts.hpp>
 #include <uriparser/Uri.h>
-#include "gxs2json.h"
+#include "gsx2json.h"
 
 #define SERVER_CERT_FILE "./cert.pem"
 #define SERVER_PRIVATE_KEY_FILE "./key.pem"
@@ -93,10 +93,9 @@ int main(int argc, char *argv[])
 	responsed from spreadsheet.google.com.
 	
 	SSL mode:
-		Certification and private key will generate
-		automatically if not provide.
-			- cert.pem
-			- key.pem
+		SSL mode is disabled by default, if you prefer using SSL mode
+		with your certification and private key. Copy your files right
+		next to Gsx2Jsonpp and rename as `cert.pem, key.pem`.
 	)";
 	cxxopts::Options options("Gsx2Jsonpp", descp);
 	

@@ -37,10 +37,10 @@ endfunction(add_sources)
 option(${PROJECT_NAME}_BUILD_TESTS "Build tests" ON)
 
 set(SERVER_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/gxs2json.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/gsx2json.cpp
 )
 set(SERVER_HEADERS
-	${CMAKE_CURRENT_SOURCE_DIR}/src/gxs2json.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/gsx2json.h
 )
 set(RESOURCE_FILES
     cpp-httplib/example/ca-bundle.crt
