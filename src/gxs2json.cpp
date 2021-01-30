@@ -15,6 +15,15 @@ using namespace nlohmann;
 
 namespace Gxs2Json
 {
+static bool is_number(const std::string& _s)
+{
+	if (_s.empty())
+		return false;
+	
+	auto pred = [](unsigned char c) { return !std::isdigit(c); };
+	return std::find_if(_s.begin(), _s.end(), pred) == _s.end();
+}
+
 void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 {
 	UriUriA uri;
@@ -51,78 +60,105 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 		{
 			_cfg->showColumns = std::strcmp(query->key, "true") == 0;
 		}
+		else if (_cfg && std::strcmp(query->key, "dict") == 0)
+		{
+			_cfg->showDict = std::strcmp(query->key, "true") == 0;
+		}
 		else if (_cfg && std::strcmp(query->key, "q") == 0)
 		{
 			_cfg->query = query->value;
 		}
-		std::cout << query->key << ":" << query->value << std::endl;
 	}
 	uriFreeQueryListA(list);
 }
 	
 void parse(Content* _content, const std::string& _json, Config _cfg)
 {
-	json object, rows, columns;
+	json object, dict, rows, columns;
 	auto raw = json::parse(_json);
 	auto timestamp = raw["feed"]["updated"]["$t"];
-	auto entries = raw["feed"]["entry"];
 	_content->timestamp = timestamp.get<std::string>();
-	for (auto entry : entries)
+	for (auto entry : raw["feed"]["entry"])
 	{
-		json newRow;
+		json row;
 		unsigned pkey = 0;
 		bool queried = _cfg.query.empty();
-		for (auto it = entry.rbegin(); it != entry.rend(); it++)
+		for (auto it = entry.begin(); it != entry.end(); it++)
 		{
+			// left most column as key
+			if (it.key().compare("title") == 0)
+			{
+				auto value = it.value()["$t"].get<std::string>();
+				if (is_number(value))
+				{
+					pkey = std::atoi(value.c_str());
+				}
+			}
 			// seek for actual data
-			if (it.key().rfind("gsx$", 0) != 0)
-				continue;
-			auto key = it.key();
-			key = key.substr(strlen("gsx$"));
-			// skip prefix with "noex" (non export)
-			if (key.rfind("noex", 0) == 0)
-				continue;
-			auto value = it.value()["$t"].get<std::string>();
-			if (pkey == 0)
+			else if (it.key().rfind("gsx$", 0) == 0)
 			{
-				pkey = std::atoi(value.c_str());
-			}
-			if (!_cfg.query.empty())
-			{
-				std::string lkey, lvalue, lquery;
-				std::transform(key.begin(), key.end(), lkey.begin(), ::tolower);
-				std::transform(value.begin(), value.end(), lvalue.begin(), ::tolower);
-				std::transform(_cfg.query.begin(), _cfg.query.end(), lquery.begin(), ::tolower);
-				queried |= lkey.rfind(lquery, 0) >= 0;
-				queried |= lvalue.rfind(lquery, 0) >= 0;
-			}
-			newRow[key] = value;
-			if (_cfg.useInteger)
-			{
-				try {
-					newRow[key] = std::stoi(value);
+				auto key = it.key();
+				key = key.substr(strlen("gsx$"));
+				// skip prefix with "noex" (non export)
+				if (key.rfind("noex", 0) == 0)
+					continue;
+				auto value = it.value()["$t"].get<std::string>();
+				if (!_cfg.query.empty())
+				{
+					std::string lkey, lvalue, lquery;
+					std::transform(key.begin(), key.end(), lkey.begin(), ::tolower);
+					std::transform(value.begin(), value.end(), lvalue.begin(), ::tolower);
+					std::transform(_cfg.query.begin(), _cfg.query.end(), lquery.begin(), ::tolower);
+					queried |= lkey.rfind(lquery, 0) >= 0;
+					queried |= lvalue.rfind(lquery, 0) >= 0;
 				}
-				catch(const std::exception& e) {
-					// Do not thing here
+				row[key] = value;
+				if (_cfg.useInteger)
+				{
+					if (value.empty())
+					{
+						row[key] = 0;
+					}
+					else if (is_number(value))
+					{
+						row[key] = std::stoi(value);
+					}
 				}
-			}
-			if (queried)
-			{
-			  columns[key].push_back(value);
+				if (queried)
+				{
+					json jvalue = value;
+					if (_cfg.useInteger)
+					{
+						if (value.empty())
+						{
+							jvalue = 0;
+						}
+						else if (is_number(value))
+						{
+							jvalue = std::stoi(value);
+						}
+					}
+					columns[key].push_back(jvalue);
+				}
 			}
 		}
 		if (queried)
 		{
-		  rows[std::to_string(pkey)] = newRow;
+			rows.push_back(row);
+			dict[std::to_string(pkey)] = row;
 		}
 	}
 	if (_cfg.showColumns)
 	{
 		object["columns"] = columns;
 	}
-	if (_cfg.showRows)
+	if (_cfg.showDict)
 	{
 		object["rows"] = rows;
+	}
+	if (_cfg.showDict)
+	{
+		object["dict"] = dict;
 	}
 	_content->payload = object.dump();
 }

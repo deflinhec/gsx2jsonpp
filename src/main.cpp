@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 				Content content;
 				try {
 					parse(&content, cli_res->body, config);
-					res.set_content(content.payload, "text/plain");
+					res.set_content(content.payload, "application/json");
 				}
 				catch (const std::exception& e)
 				{

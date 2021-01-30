@@ -26,7 +26,7 @@
 #include "gxs2json.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
-#define GSX2JSON_URI_FORMAT "/api?id=%s&sheet=%d&columns=false"
+#define GSX2JSON_URI_FORMAT "/api?id=%s&sheet=%d&columns=false&rows=false"
 using namespace httplib;
 using namespace nlohmann;
 
@@ -69,12 +69,13 @@ TEST(URI, Parse)
 	using namespace Gxs2Json;
 	Config config; Identifier id;
 	EXPECT_NO_THROW(parse(url, &config, &id));
-	ASSERT_TRUE(config.query.empty());
-	ASSERT_FALSE(config.showColumns);
-	ASSERT_TRUE(config.useInteger);
-	ASSERT_TRUE(config.showRows);
-	ASSERT_STREQ(id.id.c_str(), SpreadsheetID);
-	ASSERT_EQ(id.sheet, 1);
+	EXPECT_TRUE(config.query.empty());
+	EXPECT_FALSE(config.showColumns);
+	EXPECT_TRUE(config.useInteger);
+	EXPECT_FALSE(config.showRows);
+	EXPECT_TRUE(config.showDict);
+	EXPECT_STREQ(id.id.c_str(), SpreadsheetID);
+	EXPECT_EQ(id.sheet, 1);
 }
 
 class ParserTests: public ::testing::Test
@@ -106,4 +107,73 @@ TEST_F(ParserTests, ToJson)
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
 	ASSERT_FALSE(content.timestamp.empty());
 	ASSERT_FALSE(content.payload.empty());
+}
+
+TEST_F(ParserTests, RowCompactibility)
+{
+	Client ins("gsx2json.com");
+	char url[BUFSIZ] = {0};
+	const char* fmt = "/api?id=%s&sheet=%d&columns=false";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	auto res = ins.Get(url);
+	ASSERT_TRUE(res);
+	EXPECT_EQ(res->status, 200);
+	const char* ctype = "application/json; charset=utf-8";
+	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
+	ASSERT_FALSE(res->body.empty());
+	auto a = json::parse(res->body);
+	using namespace Gxs2Json; Content content;
+	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
+	auto b = json::parse(content.payload);
+	ASSERT_FALSE(content.payload.empty());
+	EXPECT_FALSE(a["rows"].empty());
+	EXPECT_FALSE(b["rows"].empty());
+	EXPECT_EQ(json::diff(a["rows"], b["rows"]).size(), 0);
+}
+
+TEST_F(ParserTests, ColumnsCompactibility)
+{
+	Client ins("gsx2json.com");
+	char url[BUFSIZ] = {0};
+	const char* fmt = "/api?id=%s&sheet=%d&rows=false";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	auto res = ins.Get(url);
+	ASSERT_TRUE(res);
+	EXPECT_EQ(res->status, 200);
+	const char* ctype = "application/json; charset=utf-8";
+	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
+	ASSERT_FALSE(res->body.empty());
+	auto a = json::parse(res->body);
+	using namespace Gxs2Json; Content content;
+	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
+	auto b = json::parse(content.payload);
+	ASSERT_FALSE(content.payload.empty());
+	EXPECT_FALSE(a["columns"].empty());
+	EXPECT_FALSE(b["columns"].empty());
+	EXPECT_EQ(json::diff(a["columns"], b["columns"]).size(), 0);
+}
+
+TEST_F(ParserTests, QueryCompactibility)
+{
+	Client ins("gsx2json.com");
+	char url[BUFSIZ] = {0};
+	const char* fmt = "/api?id=%s&sheet=%d&query=1b";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	auto res = ins.Get(url);
+	ASSERT_TRUE(res);
+	EXPECT_EQ(res->status, 200);
+	const char* ctype = "application/json; charset=utf-8";
+	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
+	ASSERT_FALSE(res->body.empty());
+	auto a = json::parse(res->body);
+	using namespace Gxs2Json; Content content;
+	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
+	auto b = json::parse(content.payload);
+	ASSERT_FALSE(content.payload.empty());
+	EXPECT_FALSE(a["rows"].empty());
+	EXPECT_FALSE(b["rows"].empty());
+	EXPECT_EQ(json::diff(a["rows"], b["rows"]).size(), 0);
+	EXPECT_FALSE(a["columns"].empty());
+	EXPECT_FALSE(b["columns"].empty());
+	EXPECT_EQ(json::diff(a["columns"], b["columns"]).size(), 0);
 }

@@ -42,6 +42,7 @@ struct Config
 {
 	std::string query;
 	bool useInteger = true;
+	bool showDict = true;
 	bool showRows = true;
 	bool showColumns = true;
 };
