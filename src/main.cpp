@@ -214,14 +214,43 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				snprintf(buf, sizeof(buf), "%d", res.status);
+				snprintf(buf, sizeof(buf), "%d", cli_res->status);
 				res.set_content(buf, "text/plain");
 			}
 		}
-		else
+	});
+	
+	srv.Get("/timestamp", [](const Request & req, Response &res) {
+		using namespace Gxs2Json;
+		Config config; Identifier id;
+		try {
+			parse(req.target, &config, &id);
+		}
+		catch (const std::exception& e) {
+			res.set_content(e.what(), "text/plain");
+		}
+		Client cli(SPREADSHEET_HOST);
+		char buf[BUFSIZ];
+		snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
+		if (auto cli_res = cli.Get(buf))
 		{
-			snprintf(buf, sizeof(buf), "%d", res.status);
-			res.set_content(buf, "text/plain");
+			if (cli_res->status == 200)
+			{
+				Content content;
+				try {
+					parse(&content, cli_res->body, config);
+					res.set_content(content.timestamp, "text/plain");
+				}
+				catch (const std::exception& e)
+				{
+					res.set_content(e.what(), "text/plain");
+				}
+			}
+			else
+			{
+				snprintf(buf, sizeof(buf), "%d", cli_res->status);
+				res.set_content(buf, "text/plain");
+			}
 		}
 	});
 	
