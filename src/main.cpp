@@ -100,7 +100,8 @@ int main(int argc, char *argv[])
 	cxxopts::Options options("Gsx2Jsonpp", descp);
 	
 	options.add_options()
-		("ssl", "SSL mode")
+		("ssl", "SSL mode", cxxopts::value<bool>()->default_value("false"))
+		("p,port", "Port", cxxopts::value<unsigned short>()->default_value("8080"))
 		("h,help", "Print usage")
 	;
 	
@@ -265,7 +266,7 @@ int main(int argc, char *argv[])
 	});
 	
 	const char* host = "localhost";
-	const unsigned short port = 8080;
+	const unsigned short port = result["port"].as<unsigned short>();
 	std::cout << "listening " << host;
 	std::cout << ":" << port << std::endl;
 	srv.listen(host, port);
