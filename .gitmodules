@@ -1,3 +1,12 @@
 [submodule "cpp-httplib"]
 	path = cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib.git
+[submodule "cxxopts"]
+	path = cxxopts
+	url = https://github.com/jarro2783/cxxopts.git
+[submodule "json"]
+	path = json
+	url = https://github.com/nlohmann/json.git
+[submodule "uriparser"]
+	path = uriparser
+	url = https://github.com/uriparser/uriparser.git
