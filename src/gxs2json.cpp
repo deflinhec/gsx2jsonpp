@@ -50,19 +50,19 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 		}
 		else if (_cfg && std::strcmp(query->key, "integers") == 0)
 		{
-			_cfg->useInteger = std::strcmp(query->key, "true") == 0;
+			_cfg->useInteger = std::strcmp(query->value, "true") == 0;
 		}
 		else if (_cfg && std::strcmp(query->key, "rows") == 0)
 		{
-			_cfg->showRows = std::strcmp(query->key, "true") == 0;
+			_cfg->showRows = std::strcmp(query->value, "true") == 0;
 		}
 		else if (_cfg && std::strcmp(query->key, "columns") == 0)
 		{
-			_cfg->showColumns = std::strcmp(query->key, "true") == 0;
+			_cfg->showColumns = std::strcmp(query->value, "true") == 0;
 		}
 		else if (_cfg && std::strcmp(query->key, "dict") == 0)
 		{
-			_cfg->showDict = std::strcmp(query->key, "true") == 0;
+			_cfg->showDict = std::strcmp(query->value, "true") == 0;
 		}
 		else if (_cfg && std::strcmp(query->key, "q") == 0)
 		{
@@ -152,7 +152,7 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 	{
 		object["columns"] = columns;
 	}
-	if (_cfg.showDict)
+	if (_cfg.showRows)
 	{
 		object["rows"] = rows;
 	}
