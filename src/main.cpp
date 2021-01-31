@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
 	
 	options.add_options()
 		("ssl", "SSL mode", cxxopts::value<bool>()->default_value("false"))
+		("host", "Host", cxxopts::value<std::string>()->default_value("localhost"))
 		("p,port", "Port", cxxopts::value<unsigned short>()->default_value("8080"))
 		("h,help", "Print usage")
 	;
@@ -265,11 +266,11 @@ int main(int argc, char *argv[])
 		std::cout << log(req, res) << std::endl;
 	});
 	
-	const char* host = "localhost";
+	const std::string host = result["host"].as<std::string>();
 	const unsigned short port = result["port"].as<unsigned short>();
 	std::cout << "listening " << host;
 	std::cout << ":" << port << std::endl;
-	srv.listen(host, port);
+	srv.listen(host.c_str(), port);
 	
 	return 0;
 }
