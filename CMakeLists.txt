@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1.3)
 
 include(CheckCXXCompilerFlag)
 
-project(Gsx2Jsonpp)
+project(Gsx2Jsonpp VERSION 0.1.0)
 
 # Set minimum C++ to 2011 standards
 set(CMAKE_CXX_STANDARD 11)
