@@ -124,5 +124,5 @@ install(TARGETS ${PROJECT_NAME}
 
 if (${PROJECT_NAME}_BUILD_TESTS)
     enable_testing ()
-	add_subdirectory(test)
+    add_subdirectory(test)
 endif()

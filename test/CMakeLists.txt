@@ -1,5 +1,5 @@
 # Download and unpack googletest at configure time
-configure_file(CMakeLists.txt.in ${CMAKE_CURRENT_BINARY_DIR}/googletest-download/CMakeLists.txt)
+configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
 	RESULT_VARIABLE result
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
@@ -32,6 +32,8 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 	include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+configure_file(ca-bundle.crt ca-bundle.crt)
+
 add_executable(run-tests
     main.cpp
     ${SERVER_SOURCES}
@@ -60,6 +62,4 @@ target_link_libraries(run-tests cxxopts::cxxopts)
 target_link_libraries(run-tests nlohmann_json::nlohmann_json)
 target_link_libraries(run-tests gtest_main)
 
-gtest_discover_tests(run-tests
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin
-)
+gtest_discover_tests(run-tests)
