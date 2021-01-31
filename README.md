@@ -143,3 +143,5 @@ There are three sections to the returned data.
 ## :clipboard: TODO-List
 
 - :white_large_square: json file lockdown
+
+- :white_large_square: docker
