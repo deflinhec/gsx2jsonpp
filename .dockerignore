@@ -1,0 +1,18 @@
+.git/*
+
+# Executable generated files
+build/proj/*
+build/unix*/*
+include/*
+lib/*
+bin/*
+
+Dockerfile
+Dockerfile.sh
+Dockerfile.ps1
+
+# Windows generated files
+out/*
+.vs/*
+**/out/*
+**/.vs/*
