@@ -6,11 +6,8 @@ jobs:
   ubuntu_native_hosted:
     runs-on: ubuntu-latest
     steps:
-      - name: install packages
-        run: |
-          apt-get update -m && apt-get install -y --no-install-recommends \
-          gcc g++ cmake git
-        shell: bash
+      - name: Get specific version CMake, v3.14.0
+        uses: lukka/get-cmake@v3.14.0
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
