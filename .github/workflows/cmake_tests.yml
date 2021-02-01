@@ -32,3 +32,8 @@ jobs:
           useVcpkgToolchainFile: true
           cmakeAppendedArgs: '-GNinja'
           buildDirectory: ${{ env.buildDir }}
+      - name: Run tests
+        shell: bash
+        run: |
+          cd ${GITHUB_WORKSPACE}/build
+          ctest -C Debug
