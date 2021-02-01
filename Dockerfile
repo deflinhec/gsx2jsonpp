@@ -25,7 +25,7 @@ ARG BUILD_TYPE=Release
 
 COPY . /project
 WORKDIR /project
-RUN /bin/sh scripts/build.sh $BUILD_TYPE
+RUN /bin/bash scripts/build.sh $BUILD_TYPE
 
 ENV TZ=Asia/Taipei
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime

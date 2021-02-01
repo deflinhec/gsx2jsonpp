@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # 1. build docker images
 docker build --rm -t deflinhec/gsx2jsonpp ${PWD}
