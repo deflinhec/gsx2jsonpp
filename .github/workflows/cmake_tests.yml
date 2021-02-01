@@ -4,18 +4,19 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build_task:
-    name: ${{ matrix.operating-system }}-hosted
-    runs-on: ${{ matrix.operating-system }}
+    name: ${{ matrix.os }}-hosted
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        cmake_ver: [3.19.3, 3.15.1, 3.15.1]
     steps:
       - name: Checks-out
         uses: actions/checkout@v2
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.7
         with:
-          cmake-version: '3.16.x'
+          cmake-version: ${{ matrix.cmake_ver }}
       - name: Run action
         uses: ashutoshvarma/action-cmake-build@ade188313bc7eaa6f14349569a64d8bc716342ff
         with:
