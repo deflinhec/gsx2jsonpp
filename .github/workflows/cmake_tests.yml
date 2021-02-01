@@ -15,7 +15,7 @@ jobs:
         with:
           cmake-version: '3.16.x'
       - name: Run action
-        uses: ashutoshvarma/action-cmake-build@latest
+        uses: ashutoshvarma/action-cmake-build@ade188313bc7eaa6f14349569a64d8bc716342ff
         with:
           submodule-update: true
           run-test: true
