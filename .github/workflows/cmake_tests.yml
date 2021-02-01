@@ -6,8 +6,8 @@ jobs:
   ubuntu_native_hosted:
     runs-on: ubuntu-latest
     steps:
-      - name: Get specific version CMake, v3.14.0
-        uses: lukka/get-cmake@v3.14.0
+      - name: Get specific version CMake, v3.14.1
+        uses: lukka/get-cmake@v3.14.1
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
