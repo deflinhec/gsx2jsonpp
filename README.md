@@ -1,3 +1,4 @@
+![Build CMake](https://github.com/deflinhec/gsx2jsonpp/workflows/Build%20CMake/badge.svg)
 # GSX2JSONPP - Google Spreadsheet to JSON API C/C++ service.
 
 Inspired by [55sketch/gsx2Json](https://github.com/55sketch/gsx2json), preserve all functinality of origin and implement additional features.
