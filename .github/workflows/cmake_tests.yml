@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: true
       - name: Setup cmake and ninja
-        uses: lukka/get-cmake@v3.17.1
+        uses: lukka/get-cmake@latest
       - name: Setup dependency
         uses: lukka/run-vcpkg@v6.2
         with:
