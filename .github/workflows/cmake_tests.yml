@@ -17,6 +17,14 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.7
         with:
           cmake-version: ${{ matrix.cmake_ver }}
+      - name: Setup dependency
+        uses: ./
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/vcpkg
+          vcpkgArguments: openssl zlib
+          vcpkgGitUrl: 'https://github.com/microsoft/vcpkg.git'
+          vcpkgGitCommitId: 'a8ac047e6c40b806ac89ac4d7281d45d7c0aaf29'
+          useShell: true
       - name: Run action
         uses: ashutoshvarma/action-cmake-build@ade188313bc7eaa6f14349569a64d8bc716342ff
         with:
