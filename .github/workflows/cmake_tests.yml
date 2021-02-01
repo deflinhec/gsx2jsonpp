@@ -9,7 +9,5 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: true
-      - name: Run unit tests
-        uses: HorstBaerbel/action-ctest@1.0
-        with:
-          builddir: '.build'
+      - name: Build Linux native executable
+        uses: lukka/run-cmake@v3
