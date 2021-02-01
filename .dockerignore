@@ -7,10 +7,6 @@ include/*
 lib/*
 bin/*
 
-Dockerfile
-Dockerfile.sh
-Dockerfile.ps1
-
 # Windows generated files
 out/*
 .vs/*

@@ -2,16 +2,15 @@ FROM debian:bullseye-slim
 LABEL maintainer "deflinhec <deflinhec@gmail.com>"
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	gcc \
 	g++ \
 	git \
 	make \
 	cmake \
-	libc6-dev \
 	libssl-dev \
 	zlib1g-dev \
+	apt-utils \
     apt-transport-https \
 	ca-certificates \
 	supervisor \
@@ -26,7 +25,7 @@ ARG BUILD_TYPE=Release
 
 COPY . /project
 WORKDIR /project
-RUN cd build && /bin/bash build.sh $BUILD_TYPE
+RUN /bin/sh scripts/build.sh $BUILD_TYPE
 
 ENV TZ=Asia/Taipei
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
