@@ -6,9 +6,14 @@ jobs:
   test-action:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out
-      - uses: actions/checkout@v2
-      # Runs action
+      - name: Checks-out
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.7
+        with:
+          cmake-version: '3.16.x'
       - name: Run action
         uses: ashutoshvarma/action-cmake-build@v1
         with:
