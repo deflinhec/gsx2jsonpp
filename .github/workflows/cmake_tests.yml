@@ -3,14 +3,11 @@ name: Build CMake
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  test-action:
+  ubuntu_native_hosted:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out
-      - uses: actions/checkout@v2
-      # Runs action
-      - name: Run action
-        uses: ashutoshvarma/action-cmake-build@v1
+      - uses: actions/checkout@v1
         with:
-          submodule-update: true
-          run-test: true
+          submodules: true
+      - name: Run unit tests
+        uses: HorstBaerbel/action-ctest@1.0
