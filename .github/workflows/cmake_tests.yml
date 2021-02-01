@@ -6,24 +6,16 @@ jobs:
   ubuntu_native_hosted:
     runs-on: ubuntu-latest
     steps:
-      - name: Get specific version CMake, v3.17.1
-        uses: lukka/get-cmake@v3.17.1
-      - name: Checkout source code
+      - name: Checks-out
         uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Run vcpkg
-        uses: lukka/run-vcpkg@v6
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.7
         with:
-          # Just install vcpkg for now, do not install any ports in this step yet.
-          setupOnly: true
-          # Location of the vcpkg as submodule of the repository.
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-          # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
-          # compute its hash and append this to the computed cache's key.
-          appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
-          vcpkgTriplet: ${{ matrix.triplet }}
-          # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
-          additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
-      - name: Build Linux native executable
-        uses: lukka/run-cmake@v3
+          cmake-version: '3.16.x'
+      - name: Run action
+        uses: ashutoshvarma/action-cmake-build@ade188313bc7eaa6f14349569a64d8bc716342ff
+        with:
+          submodule-update: true
+          run-test: true
