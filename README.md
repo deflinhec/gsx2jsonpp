@@ -12,8 +12,12 @@ Inspired by [55sketch/gsx2Json](https://github.com/55sketch/gsx2json), preserve 
 
 ## :label: Build & Startup
 
-- Run `sh scripts/build.sh`
+- Run `bash scripts/build.sh`
 - Run `bin/Gsx2Jsonpp`
+
+## :label: Build docker image & Startup
+
+- Run `bash scripts/build_docker_image.sh`
 
 ## :label: Usage
 
