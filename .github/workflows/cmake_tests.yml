@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checks-out
         uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.7
         with:
