@@ -4,12 +4,16 @@ Inspired by [55sketch/gsx2Json](https://github.com/55sketch/gsx2json), preserve 
 
 :coffee: [buy me a coffee](https://ko-fi.com/deflinhec)
  
+## :label: Clone repository
+
+- Run `git clone https://github.com/deflinhec/gsx2jsonpp.git`
+- Run `cd gsx2jsonpp`
+- Run `git submodule update --init`
+
 ## :label: Build & Startup
 
-- Run `cd build`
-- Run `./build.sh Release`
-- Run `cd ../bin`
-- Run `./Gsx2Jsonpp`
+- Run `sh scripts/build.sh`
+- Run `bin/Gsx2Jsonpp`
 
 ## :label: Usage
 

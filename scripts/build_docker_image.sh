@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 # 1. build docker images
-docker build --rm -t deflinhec/gsx2jsonpp .
+docker build --rm -t deflinhec/gsx2jsonpp ${PWD}
 docker stop gsx2jsonpp
 docker rm gsx2jsonpp
 
