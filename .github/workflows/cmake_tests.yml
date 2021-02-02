@@ -35,7 +35,7 @@ jobs:
       - name: Setup dependency
         uses: lukka/run-vcpkg@v6.2
         env:
-          vcpkgFile: ${{github.workspace}}/.github/vcpkg-${{matrix.triplet}}-dependencies
+          vcpkgFile: ${{github.workspace}}/dependencies/vcpkg-${{matrix.triplet}}.txt
         with:
           vcpkgArguments: '@${{ env.vcpkgFile }}'
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
