@@ -52,17 +52,8 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=.
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
-      - name: Export dll
-        if: runner.os == 'Windows'
-        run: |
-          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
       - name: Run tests
         shell: bash
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Gsx2Jsonpp-${{ matrix.os }}
-          path: ${{ env.buildDir }}/bin/
