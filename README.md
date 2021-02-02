@@ -3,20 +3,26 @@
 
 Inspired by [55sketch/gsx2Json](https://github.com/55sketch/gsx2json), preserve all functinality of origin and implement additional features.
 
-:coffee: [buy me a coffee](https://ko-fi.com/deflinhec)
+## :speech_balloon: About
+One useful feature of Google Spreadsheets is the ability to access the data as JSON by using a particular feed URL. However, this is a bit fiddly to do, and the resulting JSON is pretty unreadable, with usable data buried deep inside objects.
+
+This API connects to your spreadsheet and santizes the data, providing simple, readable JSON for you to use in your app.
+
+## :coffee: Donation
+ [buy me a coffee](https://ko-fi.com/deflinhec)
  
-## :label: Clone repository
+## :file_cabinet: Clone repository
 
 - Run `git clone https://github.com/deflinhec/gsx2jsonpp.git`
 - Run `cd gsx2jsonpp`
 - Run `git submodule update --init`
 
-## :label: Build & Startup
+## :toolbox: Build & Startup
 
 - Run `bash scripts/build.sh`
 - Run `bin/Gsx2Jsonpp`
 
-## :label: Build docker image & Startup
+## :whale: Build docker image & Startup
 
 - Run `bash scripts/build_docker_image.sh`
 
@@ -46,13 +52,13 @@ For file versioning purpose, you can access spreadsheet updated time by using th
 http://example.com/timestamp?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 ```
 
-## :label: Spreadsheet rule
+## :dart: Spreadsheet rule
 
 - Column name begin with `NOEX_` will not export to the final result.
 
 - Make sure to add a left most column represents as an unique integer key.
 
-### :label: Parameters
+### :memo: Parameters
 
 **id (required):** The ID of your document. This is the big long aplha-numeric code in the middle of your document URL.
 
