@@ -83,9 +83,10 @@ jobs:
         run: |
           xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
       - name: Compress
-        uses: montudor/action-zip@v0.1.1
+        uses: papeloto/action-zip@v1
         with:
-          args: zip -qq -r Gsx2Jsonpp-${{ matrix.os }}.zip build/bin
+          files: build/bin
+          dest: Gsx2Jsonpp-${{ matrix.os }}.zip 
       - name: Upload
         uses: actions/upload-release-asset@v1
         env:
