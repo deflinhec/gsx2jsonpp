@@ -37,7 +37,11 @@ jobs:
         uses: lukka/run-cmake@v3
         with:
           useVcpkgToolchainFile: true
-          cmakeAppendedArgs: '-GNinja -DCMAKE_INSTALL_PREFIX=../ -DCMAKE_INSTALL_LIBDIR=../lib'
+          cmakeAppendedArgs: >-
+            --target install
+            -G Ninja
+            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}
+            -DCMAKE_INSTALL_LIBDIR=${{ github.workspace }}/lib
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
