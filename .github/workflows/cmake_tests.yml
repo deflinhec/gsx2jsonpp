@@ -32,6 +32,7 @@ jobs:
           vcpkgArguments: openssl zlib
           vcpkgGitUrl: 'https://github.com/microsoft/vcpkg.git'
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
+          cleanAfterBuild: false
           useShell: true
       - name: Build and install
         uses: lukka/run-cmake@v3
