@@ -46,9 +46,9 @@ jobs:
         with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           useVcpkgToolchainFile: true
-          cmakeBuildType: Release
           cmakeAppendedArgs: >-
             -G Ninja
+            -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_INSTALL_PREFIX=.
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
