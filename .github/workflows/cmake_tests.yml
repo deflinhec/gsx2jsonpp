@@ -46,7 +46,7 @@ jobs:
       - name: Export dll
         if: runner.os == 'Windows'
         run: |
-          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\*.dll bin\
+          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll bin\
       - name: Run tests
         shell: bash
         run: |
