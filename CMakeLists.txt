@@ -46,6 +46,10 @@ set(RESOURCE_FILES
     cpp-httplib/example/ca-bundle.crt
 )
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
 add_executable(${PROJECT_NAME}
 	src/main.cpp
 	${SERVER_SOURCES}
