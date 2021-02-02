@@ -1,0 +1,5 @@
+--triplet
+x64-osx
+openssl
+zlib
+dirent
