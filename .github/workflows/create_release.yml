@@ -74,8 +74,8 @@ jobs:
         uses: canastro/copy-file-action@master
         with:
           flags: -vr
-          source: '${{ github.workspace }}/vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/bin/*'
-          target: '${{ github.workspace }}/build/bin/'
+          source: 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/bin/'
+          target: 'build/bin/'
       - name: Compress
         uses: montudor/action-zip@v0.1.1
         with:
