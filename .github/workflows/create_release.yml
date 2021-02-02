@@ -74,7 +74,7 @@ jobs:
           ctest -C Debug
       - name: List files
         run: |
-          ls -all
+          du -h -d 3
       - name: Export libraries
         uses: canastro/copy-file-action@master
         with:
