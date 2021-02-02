@@ -116,6 +116,7 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION bin
     RESOURCE DESTINATION bin
+    LIBRARY DESTINATION lib
 )
 
 ###################################################
