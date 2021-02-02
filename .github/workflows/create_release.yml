@@ -74,7 +74,8 @@ jobs:
       - name: Export libraries
         if: runner.os == 'macOS'
         run: |
-          cp -vr vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.' 'build/bin/'
+          cp -vr 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.' \
+          'build/bin/'
       - name: Export libraries
         if: runner.os == 'Windows'
         run: |
