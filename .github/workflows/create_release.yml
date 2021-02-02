@@ -7,21 +7,30 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  build_task:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+  build_release:
+    name: ${{ matrix.os }}-hosted
+    needs: create_release
     env:
       buildDir: '${{ github.workspace }}/build'
-    name: ${{ matrix.os }}-hosted
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-        - os: ubuntu-latest
-          triplet: x64-linux
-        - os: windows-latest
-          triplet: x64-windows
-        - os: macos-latest
-          triplet: x64-osx
     steps:
       - name: Checks-out
         uses: actions/checkout@v2
@@ -58,17 +67,18 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Gsx2Jsonpp-${{ matrix.os }}
-          path: ${{ env.buildDir }}/bin/
-      - name: Create Release
-        uses: actions/create-release@v1
+      - name: Compress
+        shell: bash
+        run: |
+          cd ./build/bin
+          mkdir ../artifact
+          zip -r ../artifact/Gsx2Jsonpp-${{ matrix.os }}.zip *
+      - name: Upload
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./build/artifact/Gsx2Jsonpp-${{ matrix.os }}.zip
+          asset_name: Gsx2Jsonpp-${{ matrix.os }}.zip
+          asset_content_type: application/zip
