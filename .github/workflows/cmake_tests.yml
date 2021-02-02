@@ -37,7 +37,6 @@ jobs:
         env:
           vcpkgFile: ${{github.workspace}}/.github/vcpkg-${{matrix.triplet}}-dependencies
         with:
-          setupOnly: true
           vcpkgArguments: '@${{ env.vcpkgFile }}'
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           appendedCacheKey: ${{ hashFiles(env.vcpkgFile) }}-cachekey
