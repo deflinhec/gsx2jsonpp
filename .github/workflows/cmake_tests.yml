@@ -41,7 +41,7 @@ jobs:
           cmakeAppendedArgs: >-
             -G Ninja
             -DCMAKE_VERBOSE_MAKEFILE=1
-            -CMAKE_INSTALL_PREFIX=.
+            -DCMAKE_INSTALL_PREFIX=.
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
