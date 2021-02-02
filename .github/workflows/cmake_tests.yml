@@ -42,6 +42,7 @@ jobs:
             -G Ninja
             -DCMAKE_VERBOSE_MAKEFILE=1
             -DCMAKE_INSTALL_PREFIX=.
+            -DCMAKE_INSTALL_LIBDIR=bin/
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
