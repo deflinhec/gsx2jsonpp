@@ -1,0 +1,5 @@
+--triplet
+x64-windows
+openssl
+zlib
+dirent
