@@ -64,6 +64,7 @@ jobs:
             -G Ninja
             -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_INSTALL_PREFIX=.
+            -DVCPKG_APPLOCAL_DEPS_INSTALL=1
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
@@ -71,15 +72,11 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
-      - name: List files
-        run: |
-          cd ./vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}
-          du -h -d 3
       - name: Export libraries
         uses: canastro/copy-file-action@master
         with:
           flags: -vr
-          source: 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/bin/.'
+          source: 'build/lib/.'
           target: 'build/bin/'
       - name: Compress
         uses: montudor/action-zip@v0.1.1
