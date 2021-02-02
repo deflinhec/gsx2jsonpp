@@ -5,6 +5,8 @@ on:
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_dispatch:
+
 
 jobs:
   create_release:
@@ -70,6 +72,9 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
+      - name: List files
+        run: |
+          ls -all
       - name: Export libraries
         uses: canastro/copy-file-action@master
         with:
