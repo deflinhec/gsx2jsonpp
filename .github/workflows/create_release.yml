@@ -31,6 +31,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+        - os: ubuntu-latest
+          triplet: x64-linux
+        - os: windows-latest
+          triplet: x64-windows
+        - os: macos-latest
+          triplet: x64-osx
     steps:
       - name: Checks-out
         uses: actions/checkout@v2
