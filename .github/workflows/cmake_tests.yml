@@ -53,3 +53,9 @@ jobs:
         with:
           name: Gsx2Jsonpp-${{ matrix.os }}
           path: ${{ env.buildDir }}/bin/
+      - name: Upload windoe build
+        if: ${{ matrix.os }} == 'windows-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: Gsx2Jsonpp-build-${{ matrix.os }}
+          path: ${{ env.buildDir }}/
