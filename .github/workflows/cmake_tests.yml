@@ -22,7 +22,7 @@ jobs:
         - os: ubuntu-latest
           triplet: x64-linux
         - os: windows-latest
-          triplet: x86-windows
+          triplet: x64-windows
         - os: macos-latest
           triplet: x64-osx
     steps:
@@ -34,13 +34,13 @@ jobs:
         uses: lukka/get-cmake@latest
       - name: Setup dependency
         uses: lukka/run-vcpkg@v6.2
+        env:
+          vcpkgFile: ${{github.workspace}}/.github/vcpkg-${{matrix.triplet}}-dependencies
         with:
-          vcpkgDirectory: ${{ github.workspace }}/vcpkg
-          vcpkgTriplet: ${{ matrix.triplet }}
-          vcpkgArguments: openssl zlib
-          vcpkgGitUrl: 'https://github.com/microsoft/vcpkg.git'
+          vcpkgArguments: '@${{ env.vcpkgFile }}'
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          appendedCacheKey: ${{ hashFiles(env.vcpkgFile) }}-cachekey
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
-          useShell: true
       - name: Build and install
         uses: lukka/run-cmake@v3
         with:
