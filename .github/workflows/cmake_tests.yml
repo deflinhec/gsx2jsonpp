@@ -13,6 +13,7 @@ jobs:
   build_task:
     env:
       buildDir: '${{ github.workspace }}/build'
+      PLATFORM: ${{ matrix.os }}
     name: ${{ matrix.os }}-hosted
     runs-on: ${{ matrix.os }}
     strategy:
@@ -44,3 +45,8 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Gsx2Jsonpp-${{ matrix.os }}
+          path: ${{ github.workspace }}/bin/
