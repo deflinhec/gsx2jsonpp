@@ -12,7 +12,7 @@ on:
 jobs:
   build_task:
     env:
-      buildDir: '${{ github.workspace }}/build'
+      buildDir: '${{ github.workspace }}\build'
     name: ${{ matrix.os }}-hosted
     runs-on: ${{ matrix.os }}
     strategy:
