@@ -43,6 +43,10 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=.
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
+      - name: Export dll
+        if: runner.os == 'Windows'
+        run: |
+          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\*.dll bin\
       - name: Run tests
         shell: bash
         run: |
