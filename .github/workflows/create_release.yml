@@ -72,12 +72,9 @@ jobs:
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
       - name: Export libraries
-        if: runner.os != 'Windows'
-        uses: canastro/copy-file-action@master
-        with:
-          flags: -vr
-          source: 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.'
-          target: 'build/bin/'
+        if: runner.os == 'macOS'
+        run: |
+          cp -vr vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.' 'build/bin/'
       - name: Export libraries
         if: runner.os == 'Windows'
         run: |
