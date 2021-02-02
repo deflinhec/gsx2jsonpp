@@ -87,7 +87,6 @@ target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
 ###################################################
 ### OpenSSL libraries
 ###################################################
-set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
 if (OpenSSL_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${OPENSSL_INCLUDE_DIR})
