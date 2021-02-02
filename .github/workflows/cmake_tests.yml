@@ -12,7 +12,7 @@ on:
 jobs:
   build_task:
     env:
-      buildDir: '${{ github.workspace }}\build'
+      buildDir: '${{ github.workspace }}/build'
     name: ${{ matrix.os }}-hosted
     runs-on: ${{ matrix.os }}
     strategy:
@@ -37,6 +37,7 @@ jobs:
         env:
           vcpkgFile: ${{github.workspace}}/.github/vcpkg-${{matrix.triplet}}-dependencies
         with:
+          setupOnly: true
           vcpkgArguments: '@${{ env.vcpkgFile }}'
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           appendedCacheKey: ${{ hashFiles(env.vcpkgFile) }}-cachekey
@@ -54,7 +55,7 @@ jobs:
       - name: Export dll
         if: runner.os == 'Windows'
         run: |
-          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll  ${{ env.buildDir }}\bin\
+          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
       - name: Run tests
         shell: bash
         run: |
