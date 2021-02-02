@@ -2,4 +2,5 @@
 x64-windows
 openssl
 zlib
+brotli
 dirent
