@@ -22,7 +22,7 @@ jobs:
         - os: ubuntu-latest
           triplet: x64-linux
         - os: windows-latest
-          triplet: x64-windows
+          triplet: x86-windows
         - os: macos-latest
           triplet: x64-osx
     steps:
