@@ -64,7 +64,6 @@ jobs:
             -G Ninja
             -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_INSTALL_PREFIX=.
-            -DX_VCPKG_APPLOCAL_DEPS_INSTALL=1
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
@@ -72,6 +71,17 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
+      - name: Export libraries
+        if: runner.os != 'Windows'
+        uses: canastro/copy-file-action@master
+        with:
+          flags: -vr
+          source: 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.'
+          target: 'build/bin/'
+      - name: Export libraries
+        if: runner.os == 'Windows'
+        run: |
+          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
       - name: Compress
         uses: montudor/action-zip@v0.1.1
         with:
