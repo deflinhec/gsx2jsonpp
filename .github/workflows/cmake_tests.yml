@@ -42,8 +42,8 @@ jobs:
             --target install
             -G Ninja
             -DCMAKE_VERBOSE_MAKEFILE=1
-            -DCMAKE_PREFIX_PATH=${{ github.workspace }}
-            -DCMAKE_INSTALL_PREFIX_PATH=${{ github.workspace }}
+            -DCMAKE_PREFIX_PATH=.
+            -DCMAKE_INSTALL_PREFIX_PATH=.
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
