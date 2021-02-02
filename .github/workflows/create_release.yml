@@ -73,8 +73,9 @@ jobs:
       - name: Export libraries
         uses: canastro/copy-file-action@master
         with:
-          source: ${{github.workspace}}\vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*
-          target: ${{github.workspace}}\build\bin\
+          flags: -vr
+          source: vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\
+          target: build\bin\
       - name: Compress
         uses: montudor/action-zip@v0.1.1
         with:
