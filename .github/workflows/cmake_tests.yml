@@ -40,8 +40,7 @@ jobs:
           cmakeAppendedArgs: >-
             --target install
             -G Ninja
-            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}
-            -DCMAKE_INSTALL_LIBDIR=${{ github.workspace }}/lib
+            -DCMAKE_PREFIX_PATH=${{ github.workspace }}
           buildDirectory: ${{ env.buildDir }}
           buildWithCMakeArgs: '--target install'
       - name: Run tests
