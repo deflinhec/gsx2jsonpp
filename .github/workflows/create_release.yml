@@ -70,22 +70,21 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
-      - name: Export dll
-        if: runner.os == 'Windows'
-        run: |
-          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
+      - name: Export libraries
+        uses: canastro/copy-file-action@master
+        with:
+          source: vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*
+          target: build\bin\
       - name: Compress
-        shell: bash
-        run: |
-          cd ./build/bin
-          mkdir ../artifact
-          zip -r ../artifact/Gsx2Jsonpp-${{ matrix.os }}.zip *
+        uses: montudor/action-zip@v0.1.1
+        with:
+          args: zip -qq -r Gsx2Jsonpp-${{ matrix.os }}.zip build/bin
       - name: Upload
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./build/artifact/Gsx2Jsonpp-${{ matrix.os }}.zip
+          asset_path: ./Gsx2Jsonpp-${{ matrix.os }}.zip
           asset_name: Gsx2Jsonpp-${{ matrix.os }}.zip
           asset_content_type: application/zip
