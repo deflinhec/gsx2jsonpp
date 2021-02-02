@@ -73,6 +73,7 @@ jobs:
           ctest -C Debug
       - name: List files
         run: |
+          cd ./vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}
           du -h -d 3
       - name: Export libraries
         uses: canastro/copy-file-action@master
