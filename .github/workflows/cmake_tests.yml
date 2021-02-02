@@ -35,7 +35,7 @@ jobs:
         uses: lukka/run-vcpkg@v6.2
         with:
           vcpkgDirectory: ${{ github.workspace }}/vcpkg
-          vckpgTriplet: ${{ matrix.triplet }}
+          vcpkgTriplet: ${{ matrix.triplet }}
           vcpkgArguments: openssl zlib
           vcpkgGitUrl: 'https://github.com/microsoft/vcpkg.git'
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
