@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1.3)
 
 include(CheckCXXCompilerFlag)
 
-project(Gsx2Jsonpp VERSION 0.1.0)
+project(Gsx2Jsonpp VERSION 1.0.0)
 
 # Set minimum C++ to 2011 standards
 set(CMAKE_CXX_STANDARD 11)
@@ -45,6 +45,10 @@ set(SERVER_HEADERS
 set(RESOURCE_FILES
     cpp-httplib/example/ca-bundle.crt
 )
+
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
 
 add_executable(${PROJECT_NAME}
 	src/main.cpp
