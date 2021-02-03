@@ -118,6 +118,10 @@ http://example.com/timestamp?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 
 ## :bookmark: Example Response
 
+[Test localhost:5000 with example spreadsheet](http://localhost:5000/api?id=1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4&sheet=1)
+
+[Example spreadsheet](https://docs.google.com/spreadsheets/d/1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4/edit#gid=0)
+
 There are three sections to the returned data.
 
 - Columns (containing the names of each column)
@@ -193,10 +197,6 @@ There are three sections to the returned data.
 }
 
 ```
-
-[Test localhost:5000 with example spreadsheet](http://localhost:5000/api?id=1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4&sheet=1)
-
-[Example spreadsheet](https://docs.google.com/spreadsheets/d/1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4/edit#gid=0)
 
 
 ## :clipboard: TODO-List
