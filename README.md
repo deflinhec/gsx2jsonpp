@@ -30,7 +30,7 @@ In this example below I'm going to use `5000` as port, and output log file under
 
 - Launch with a local image
     
-    Follow instructions below, Build from source.
+    Follow instructions below, :toolbox: Build from source.
 
     ```
     docker build --rm -t gsx2jsonpp .
