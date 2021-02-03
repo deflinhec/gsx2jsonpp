@@ -1,39 +1,23 @@
-FROM debian:bullseye-slim
+FROM alpine:latest
 LABEL maintainer "deflinhec <deflinhec@gmail.com>"
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	gcc \
-	g++ \
-	git \
-	make \
-	cmake \
-	libssl-dev \
-	zlib1g-dev \
-	apt-utils \
-	apt-transport-https \
-	ca-certificates \
-	supervisor
+RUN apk --no-cache add bash \
+    git linux-headers \
+    cmake make gcc g++ \
+    libc-dev \
+    libressl-dev \
+	zlib-dev \
+    supervisor
 
-RUN rm -rf /var/lib/apt/lists/* \
-	&& mkdir -p /var/log/supervisor \
-	&& mkdir -p /etc/supervisor/conf.d
-
-ENV CC=gcc
-ENV CXX=g++
+ENV CC=gcc CXX=g++ TZ=Asia/Taipei
 EXPOSE 8080
-ARG BUILD_TYPE=Release
 
 COPY . /project
 WORKDIR /project
-RUN /bin/bash scripts/build.sh $BUILD_TYPE
-
-ENV TZ=Asia/Taipei
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
-RUN echo $TZ > /etc/timezone
-
-WORKDIR /workspace
-VOLUME /workspace
+RUN /bin/bash scripts/build.sh Release
 
 COPY supervisor.conf /etc/supervisor.conf
 CMD ["supervisord", "-c", "/etc/supervisor.conf"]
+
+WORKDIR /workspace
+VOLUME /workspace
