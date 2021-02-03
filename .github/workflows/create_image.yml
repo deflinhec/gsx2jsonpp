@@ -37,10 +37,10 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --tag deflinhhec/gsx2jsonpp-multiarch:latest \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64,linux/arm64,linux/386,linux/arm/v7 \
             --output "type=image,push=false" \
-            --tag deflinhec/gsx2jsonpp:latest \
+            --tag deflinhec/gsx2jsonpp-multiarch:latest \
             --file ./Dockerfile ./
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect deflinhec/gsx2jsonpp:latest
+          docker buildx imagetools inspect deflinhec/gsx2jsonpp-multiarch:latest
