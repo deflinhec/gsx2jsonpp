@@ -79,6 +79,7 @@ jobs:
       - name: Export libraries
         if: runner.os == 'Windows'
         run: |
+          del build\bin\*.pdb
           xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
       - name: Compress
         uses: papeloto/action-zip@v1
