@@ -21,7 +21,7 @@ In this example below I'm going to use `5000` as port, and output log file under
 - Launch with a remote image
 
     ```
-    docker pull deflinhec/gsx2jsonpp:latest`
+    docker pull deflinhec/gsx2jsonpp:latest
     ```
     
     ```
