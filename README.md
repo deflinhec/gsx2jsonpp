@@ -50,9 +50,11 @@ CMake version must greater than 3.14.0, requires openssl, zlib, brotli installed
 
 Comparing to docker image, executable size will be way more smaller than using an docker image.
 
-If library dependencies one of your concern.
-
 - Using build script
+
+    ```
+    git submodule update --init
+    ```
 
     Avaliable argument: Release|Debug|Project (Default: Release)
     
