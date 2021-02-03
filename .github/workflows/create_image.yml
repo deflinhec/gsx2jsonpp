@@ -24,7 +24,7 @@ jobs:
             ${{ runner.os }}-buildx-
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@latest
+        uses: docker/setup-buildx-action@v1.1.1
       - name: Builder instance name
         run: echo ${{ steps.buildx.outputs.name }}
       - name: Available platforms
