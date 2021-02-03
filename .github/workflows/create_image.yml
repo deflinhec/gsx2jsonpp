@@ -34,7 +34,6 @@ jobs:
           push: true
           tags: |
             deflinhec/gsx2jsonpp:latest
-            deflinhec/gsx2jsonpp:${{ github.ref }}
       - name: Inspect image
         run: |
           docker buildx imagetools inspect deflinhec/gsx2jsonpp:latest
