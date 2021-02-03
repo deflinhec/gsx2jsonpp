@@ -36,7 +36,7 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --tag deflinhhec/gsx2jsonpp-multiarch:latest \
-            --platform linux/amd64,linux/arm64,linux/386 \
+            --platform linux/amd64,linux/arm64 \
             --output "type=image,push=false" \
             --tag deflinhec/gsx2jsonpp:latest \
             --file ./Dockerfile ./
