@@ -9,24 +9,68 @@ One useful feature of Google Spreadsheets is the ability to access the data as J
 This API connects to your spreadsheet and santizes the data, providing simple, readable JSON for you to use in your app.
 
 ## :coffee: Donation
- [buy me a coffee](https://ko-fi.com/deflinhec)
+
+[buy me a coffee](https://ko-fi.com/deflinhec) 
  
-## :file_cabinet: Clone repository
+## :whale: Using docker image
 
-- Run `git clone https://github.com/deflinhec/gsx2jsonpp.git`
-- Run `cd gsx2jsonpp`
-- Run `git submodule update --init`
+Make sure [docker engine](https://www.docker.com/products/docker-desktop) has already install in your operating-system.
 
-## :toolbox: Build & Startup
+In this example below I'm going to use `5000` as port, and output log file under `bin/volume` directory.
 
-- Run `bash scripts/build.sh`
-- Run `bin/Gsx2Jsonpp`
+- Launch with a remote image
 
-## :whale: Build docker image & Startup
+    ```
+    docker pull deflinhec/gsx2jsonpp:latest`
+    ```
+    
+    ```
+    docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
+    ```
 
-- Run `bash scripts/build_docker_image.sh`
+- Launch with a local image
 
-## :label: Usage
+    ```
+    docker build --rm -t gsx2jsonpp .
+    ```
+    
+    ```
+    docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp gsx2jsonpp
+    ```
+
+After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/hi).
+
+Supervisor have been setup within the container to guarantee an auto restart after accidentially crashed.
+
+## :toolbox: Build from source
+
+CMake version must greater than 3.14.0, requires openssl, zlib, brotli installed.
+
+Comparing to docker image, executable size will be way more smaller than using an docker image.
+
+If library dependencies one of your concern.
+
+- Using build script
+
+    Avaliable argument: Release|Debug|Project (Default: Release)
+    
+    ```
+    bash scripts/build.sh
+    ```
+    
+    - Launch with executable
+        
+        ```
+        bin/Gsx2Jsonpp --host 0.0.0.0 -p 5000
+        ```
+
+    - Launch with docker image
+        
+        ```
+        bash scripts/build_docker_image.sh
+        ```
+
+## :label: Spreadsheet configuration
 
 First, you must publish your spreadsheet to the web, using `File -> Publish To Web` in your Google Spreadsheet.
 
