@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,14 +12,15 @@ jobs:
     steps:
       - name: checkout code
         uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: install buildx
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1
         with:
           version: latest
       - name: build the image
-      run: |
-        docker buildx build \
-          --push
-          --tag deflinhhec/gsx2jsonpp-multiarch:latest \
-          --platform linux/amd64,linux/arm/v7,linux/arm64 .
+        run: |
+          docker buildx build \
+            --tag deflinhhec/gsx2jsonpp-multiarch:latest \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 .
