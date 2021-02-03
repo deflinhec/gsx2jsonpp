@@ -10,11 +10,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
         with:
           submodules: true
-      - name: install buildx
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Set up Docker Buildx
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v3
         with:
@@ -22,8 +30,16 @@ jobs:
           qemu-version: latest
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
-      - name: build the image
+      - name: Docker Buildx (build)
         run: |
           docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --tag deflinhhec/gsx2jsonpp-multiarch:latest \
-            --platform linux/amd64,linux/arm64,linux/386 .
+            --platform linux/amd64,linux/arm64,linux/386 
+            --output "type=image,push=false" \
+            --tag deflinhec/gsx2jsonpp:latest \
+            --file= ./Dockerfile
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect deflinhec/gsx2jsonpp:latest
