@@ -40,7 +40,7 @@ In this example below I'm going to use `5000` as port, and output log file under
     docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp gsx2jsonpp
     ```
 
-After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/hi).
+After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/api?id=1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4&sheet=1).
 
 Supervisor have been setup within the container to guarantee an auto restart after accidentially crashed.
 
