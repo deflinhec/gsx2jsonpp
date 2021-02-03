@@ -29,6 +29,8 @@ In this example below I'm going to use `5000` as port, and output log file under
     ```
 
 - Launch with a local image
+    
+    Follow instructions below, Build from source.
 
     ```
     docker build --rm -t gsx2jsonpp .
@@ -62,12 +64,6 @@ If library dependencies one of your concern.
         
         ```
         bin/Gsx2Jsonpp --host 0.0.0.0 -p 5000
-        ```
-
-    - Launch with docker image
-        
-        ```
-        bash scripts/build_docker_image.sh
         ```
 
 ## :label: Spreadsheet configuration
