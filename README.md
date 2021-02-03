@@ -72,7 +72,7 @@ First, you must publish your spreadsheet to the web, using `File -> Publish To W
 
 ![](https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step01.png) ![](https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step02.png)<img src="https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step03.png" width="250" />
 
-Second, locate to your sheet id and sheet table index.
+Second, locate to your spreadsheet id and sheet number.
 
 ```
 https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit#gid=[SHEET_NUMBER]
