@@ -11,10 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libssl-dev \
 	zlib1g-dev \
 	apt-utils \
-    apt-transport-https \
+	apt-transport-https \
 	ca-certificates \
-	supervisor \
-	&& rm -rf /var/lib/apt/lists/* \
+	supervisor
+
+RUN rm -rf /var/lib/apt/lists/* \
 	&& mkdir -p /var/log/supervisor \
 	&& mkdir -p /etc/supervisor/conf.d
 

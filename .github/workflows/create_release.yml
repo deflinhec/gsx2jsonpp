@@ -1,14 +1,33 @@
+name: Create Release
+
 on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
+
 jobs:
-  build_task:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+  build_release:
+    name: ${{ matrix.os }}-hosted
+    needs: create_release
     env:
       buildDir: '${{ github.workspace }}/build'
-    name: ${{ matrix.os }}-hosted
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -52,21 +71,27 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
-      - name: Export dll
+      - name: Export libraries
+        if: runner.os == 'macOS'
+        run: |
+          cp -vr 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.' \
+          'build/bin/'
+      - name: Export libraries
         if: runner.os == 'Windows'
         run: |
+          del build\bin\*.pdb
           xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Compress
+        uses: papeloto/action-zip@v1
         with:
-          name: Gsx2Jsonpp-${{ matrix.os }}
-          path: ${{ env.buildDir }}/bin/
-      - name: Create Release
-        uses: actions/create-release@v1
+          files: build/bin
+          dest: Gsx2Jsonpp-${{ matrix.os }}.zip 
+      - name: Upload
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./Gsx2Jsonpp-${{ matrix.os }}.zip
+          asset_name: Gsx2Jsonpp-${{ matrix.os }}.zip
+          asset_content_type: application/zip

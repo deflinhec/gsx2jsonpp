@@ -9,30 +9,72 @@ One useful feature of Google Spreadsheets is the ability to access the data as J
 This API connects to your spreadsheet and santizes the data, providing simple, readable JSON for you to use in your app.
 
 ## :coffee: Donation
- [buy me a coffee](https://ko-fi.com/deflinhec)
+
+[buy me a coffee](https://ko-fi.com/deflinhec) 
  
-## :file_cabinet: Clone repository
+## :whale: Using docker image
 
-- Run `git clone https://github.com/deflinhec/gsx2jsonpp.git`
-- Run `cd gsx2jsonpp`
-- Run `git submodule update --init`
+Make sure [docker engine](https://www.docker.com/products/docker-desktop) has already install in your operating-system.
 
-## :toolbox: Build & Startup
+In this example below I'm going to use `5000` as port, and output log file under `bin/volume` directory.
 
-- Run `bash scripts/build.sh`
-- Run `bin/Gsx2Jsonpp`
+- Launch with a remote image
 
-## :whale: Build docker image & Startup
+    ```
+    docker pull deflinhec/gsx2jsonpp:latest
+    ```
+    
+    ```
+    docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
+    ```
 
-- Run `bash scripts/build_docker_image.sh`
+- Launch with a local image
+    
+    Follow instructions below, :toolbox: Build from source.
 
-## :label: Usage
+    ```
+    docker build --rm -t gsx2jsonpp .
+    ```
+    
+    ```
+    docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp gsx2jsonpp
+    ```
+
+After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/hi).
+
+Supervisor have been setup within the container to guarantee an auto restart after accidentially crashed.
+
+## :toolbox: Build from source
+
+CMake version must greater than 3.14.0, requires openssl, zlib, brotli installed.
+
+Comparing to docker image, executable size will be way more smaller than using an docker image.
+
+- Using build script
+
+    ```
+    git submodule update --init
+    ```
+
+    Avaliable argument: Release|Debug|Project (Default: Release)
+    
+    ```
+    bash scripts/build.sh
+    ```
+    
+    - Launch with executable
+        
+        ```
+        bin/Gsx2Jsonpp --host 0.0.0.0 -p 5000
+        ```
+
+## :label: Spreadsheet configuration
 
 First, you must publish your spreadsheet to the web, using `File -> Publish To Web` in your Google Spreadsheet.
 
 ![](https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step01.png) ![](https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step02.png)<img src="https://raw.githubusercontent.com/deflinhec/GodotGoogleSheet/master/screenshots/step03.png" width="250" />
 
-Second, locate to your sheet id and sheet table index.
+Second, locate to your spreadsheet id and sheet number.
 
 ```
 https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit#gid=[SHEET_NUMBER]
@@ -75,6 +117,10 @@ http://example.com/timestamp?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 **columns (optional - default: true)**: Setting 'columns' to false will return dictionary and rows view.
 
 ## :bookmark: Example Response
+
+[Test localhost:5000 with example spreadsheet](http://localhost:5000/api?id=1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4&sheet=1)
+
+[Example spreadsheet](https://docs.google.com/spreadsheets/d/1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4/edit#gid=0)
 
 There are three sections to the returned data.
 
@@ -151,10 +197,6 @@ There are three sections to the returned data.
 }
 
 ```
-
-`http://localhost:8080/api?id=1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4&sheet=1`
-
-[Example spreadsheet](https://docs.google.com/spreadsheets/d/1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4/edit#gid=0)
 
 
 ## :clipboard: TODO-List
