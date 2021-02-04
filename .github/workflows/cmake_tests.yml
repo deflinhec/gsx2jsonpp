@@ -3,11 +3,12 @@ name: Build CMake
 on:
   push:
     branches:
-      - develop
-  pull_request:
-    branches:
       - master
-  workflow_dispatch:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
 
 jobs:
   build_task:
