@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 	{
 		struct stat buffer;
 		bool missing = stat(SERVER_CERT_FILE, &buffer);
-		if ((missing |= stat(SERVER_PRIVATE_KEY_FILE, &buffer)))
+		if ((missing |= (bool)stat(SERVER_PRIVATE_KEY_FILE, &buffer)))
 		{
 			EVP_PKEY *key = EVP_PKEY_new();
 			RSA *rsa = RSA_new();
@@ -207,43 +207,6 @@ int main(int argc, char *argv[])
 				try {
 					parse(&content, cli_res->body, config);
 					res.set_content(content.payload, "application/json");
-				}
-				catch (const std::exception& e)
-				{
-					std::cout << "exception: " << e.what() << std::endl;
-				}
-			}
-			else
-			{
-				std::cout << SPREADSHEET_HOST << " connection failed: " << cli_res->status << std::endl;
-			}
-		}
-		else
-		{
-			std::cout << SPREADSHEET_HOST << " connection failed " << std::endl;
-		}
-	});
-	
-	srv.Get("/timestamp", [](const Request & req, Response &res) {
-		using namespace Gxs2Json;
-		Config config; Identifier id;
-		try {
-			parse(req.target, &config, &id);
-		}
-		catch (const std::exception& e) {
-			res.set_content(e.what(), "text/plain");
-		}
-		Client cli(SPREADSHEET_HOST);
-		char buf[BUFSIZ];
-		snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
-		if (auto cli_res = cli.Get(buf))
-		{
-			if (cli_res->status == 200)
-			{
-				Content content;
-				try {
-					parse(&content, cli_res->body, config);
-					res.set_content(content.timestamp, "text/plain");
 				}
 				catch (const std::exception& e)
 				{

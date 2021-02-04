@@ -91,12 +91,6 @@ You can then access your readable JSON API using the `/api` endpoint.
 http://example.com/api?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 ```
 
-For file versioning purpose, you can access spreadsheet updated time by using the `/timestamp` endpoint. 
-
-```
-http://example.com/timestamp?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
-```
-
 ## :dart: Spreadsheet rule
 
 - Column name begin with `NOEX_` will not export to the final result.
@@ -118,6 +112,10 @@ http://example.com/timestamp?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 **rows (optional - default: true)**: Setting 'rows' to false will return dictionary and columns view.
 
 **columns (optional - default: true)**: Setting 'columns' to false will return dictionary and rows view.
+
+**meta (optional - default: false)**: Setting 'meta' to true will return only meta data.
+
+**pretty (optional - default: false)**: Setting 'meta' to true will pretty print the result.
 
 ## :bookmark: Example Response
 
