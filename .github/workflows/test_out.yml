@@ -32,4 +32,4 @@ jobs:
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
       - name: Display libraries
         run: |
-          du -h -d 2 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/'
+          du -h 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/'
