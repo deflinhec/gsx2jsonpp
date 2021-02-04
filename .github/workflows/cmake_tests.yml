@@ -57,3 +57,13 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
+      - name: Export libraries
+        if: runner.os == 'Windows'
+        run: |
+          del build\bin\*.pdb
+          xcopy /y vcpkg\installed\${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}\bin\*.dll build\bin\
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Gsx2jsonpp-${{ matrix.os }}
+          path: build/bin/*
+          retention-days: 7
