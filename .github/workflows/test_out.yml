@@ -32,4 +32,5 @@ jobs:
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
       - name: Display libraries
         run: |
-          du -h 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/'
+          cd 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/'
+          du -0ah . | sort -zh | while read -r -d '' size file; do printf '%s %s\n' "$size" "$(ls --color -dF -- "$file")"; done
