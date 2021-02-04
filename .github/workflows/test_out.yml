@@ -34,3 +34,4 @@ jobs:
         run: |
           find vcpkg/ -follow -name '*.dylib'
           find vcpkg/ -follow -name '*.so'
+          find vcpkg/ -follow -name '*.a'
