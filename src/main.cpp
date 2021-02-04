@@ -210,14 +210,17 @@ int main(int argc, char *argv[])
 				}
 				catch (const std::exception& e)
 				{
-					res.set_content(e.what(), "text/plain");
+					std::cout << "exception: " << e.what() << std::endl;
 				}
 			}
 			else
 			{
-				snprintf(buf, sizeof(buf), "%d", cli_res->status);
-				res.set_content(buf, "text/plain");
+				std::cout << SPREADSHEET_HOST << " connection failed: " << cli_res->status << std::endl;
 			}
+		}
+		else
+		{
+			std::cout << SPREADSHEET_HOST << " connection failed " << std::endl;
 		}
 	});
 	
@@ -244,14 +247,17 @@ int main(int argc, char *argv[])
 				}
 				catch (const std::exception& e)
 				{
-					res.set_content(e.what(), "text/plain");
+					std::cout << "exception: " << e.what() << std::endl;
 				}
 			}
 			else
 			{
-				snprintf(buf, sizeof(buf), "%d", cli_res->status);
-				res.set_content(buf, "text/plain");
+				std::cout << SPREADSHEET_HOST << " connection failed: " << cli_res->status << std::endl;
 			}
+		}
+		else
+		{
+			std::cout << SPREADSHEET_HOST << " connection failed " << std::endl;
 		}
 	});
 	
