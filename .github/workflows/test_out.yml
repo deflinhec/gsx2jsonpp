@@ -32,4 +32,5 @@ jobs:
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
       - name: Display libraries
         run: |
-          find vcpkg/ -follow
+          find vcpkg/ -follow | grep *.dylib
+          find vcpkg/ -follow | grep *.so
