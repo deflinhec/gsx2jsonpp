@@ -1,4 +1,4 @@
-![Build CMake](https://github.com/deflinhec/gsx2jsonpp/workflows/Build%20CMake/badge.svg) 
+![Build CMake](https://github.com/deflinhec/gsx2jsonpp/workflows/Build%20CMake/badge.svg?branch=master)
 [![GitHub license](https://img.shields.io/github/license/deflinhec/gsx2jsonpp.svg)](https://github.com/deflinhec/gsx2jsonpp/blob/master/LICENSE) 
 [![GitHub release](https://img.shields.io/github/release/deflinhec/gsx2jsonpp.svg)](https://github.com/deflinhec/gsx2jsonpp/releases/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/deflinhec/gsx2jsonpp/graphs/commit-activity)
