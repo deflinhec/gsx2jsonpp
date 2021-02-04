@@ -72,11 +72,6 @@ jobs:
           cd ${GITHUB_WORKSPACE}/build
           ctest -C Debug
       - name: Export libraries
-        if: runner.os == 'macOS'
-        run: |
-          cp -vr 'vcpkg/installed/${{ env.RUNVCPKG_VCPKG_TRIPLET_OUT }}/lib/.' \
-          'build/bin/'
-      - name: Export libraries
         if: runner.os == 'Windows'
         run: |
           del build\bin\*.pdb
