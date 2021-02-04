@@ -79,6 +79,14 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 		{
 			_cfg->showDict = std::strcmp(query->value, "true") == 0;
 		}
+		else if (_cfg && std::strcmp(query->key, "meta") == 0)
+		{
+			_cfg->briefMeta = std::strcmp(query->value, "true") == 0;
+		}
+		else if (_cfg && std::strcmp(query->key, "pretty") == 0)
+		{
+			_cfg->prettyPrint = std::strcmp(query->value, "true") == 0;
+		}
 		else if (_cfg && std::strcmp(query->key, "q") == 0)
 		{
 			_cfg->query = query->value;
@@ -163,18 +171,24 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 			dict[std::to_string(pkey)] = row;
 		}
 	}
-	if (_cfg.showColumns)
+	if (_cfg.showColumns && !_cfg.briefMeta)
 	{
 		object["columns"] = columns;
 	}
-	if (_cfg.showRows)
+	if (_cfg.showRows && !_cfg.briefMeta)
 	{
 		object["rows"] = rows;
 	}
-	if (_cfg.showDict)
+	if (_cfg.showDict && !_cfg.briefMeta)
 	{
 		object["dict"] = dict;
 	}
-	_content->payload = object.dump();
+	const int indent = _cfg.prettyPrint ? 1 : -1;
+	object["meta"]["time"] = _content->timestamp;
+	auto size = _cfg.showColumns ? columns.dump(indent).length() : 0u;
+	size += _cfg.showRows ? rows.dump(indent).length() : 0u;
+	size += _cfg.showDict ? dict.dump(indent).length() : 0u;
+	object["meta"]["size"] = size;
+	_content->payload = object.dump(indent);
 }
 }

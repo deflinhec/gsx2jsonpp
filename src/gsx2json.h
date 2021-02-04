@@ -45,6 +45,8 @@ struct Config
 	bool showDict = true;
 	bool showRows = true;
 	bool showColumns = true;
+	bool briefMeta = false;
+	bool prettyPrint = false;
 };
 
 void parse(const std::string& _uri, Config* _cfg, Identifier* _id = nullptr);

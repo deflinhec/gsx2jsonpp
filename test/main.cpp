@@ -103,6 +103,24 @@ TEST(URI, ParseConfigShowDict)
 	EXPECT_FALSE(config.showDict);
 }
 
+TEST(URI, ParseConfigShowMeta)
+{
+	const char* url = "/api?meta=true";
+	using namespace Gxs2Json; Config config;
+	EXPECT_FALSE(config.briefMeta);
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_TRUE(config.briefMeta);
+}
+
+TEST(URI, ParseConfigPrettyPrint)
+{
+	const char* url = "/api?pretty=true";
+	using namespace Gxs2Json; Config config;
+	EXPECT_FALSE(config.prettyPrint);
+	EXPECT_NO_THROW(parse(url, &config));
+	EXPECT_TRUE(config.prettyPrint);
+}
+
 TEST(URI, ParseConfigUseInteger)
 {
 	const char* url = "/api?integers=false";
@@ -126,7 +144,8 @@ TEST(URI, ParseCompondQueries)
 	char url[BUFSIZ] = {0};
 	const char* fmt =
 	"/api?q=aabb&integers=false&dict=false"
-	"&columns=false&rows=false&id=%s&sheet=%d";
+	"&columns=false&rows=false&id=%s&sheet=%d"
+	"&pretty=true&meta=true";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
 	using namespace Gxs2Json;
 	Config config; Identifier id;
@@ -135,6 +154,8 @@ TEST(URI, ParseCompondQueries)
 	EXPECT_TRUE(config.showDict);
 	EXPECT_TRUE(config.showRows);
 	EXPECT_TRUE(config.showColumns);
+	EXPECT_FALSE(config.briefMeta);
+	EXPECT_FALSE(config.prettyPrint);
 	EXPECT_TRUE(config.useInteger);
 	EXPECT_TRUE(config.query.empty());
 	EXPECT_NO_THROW(parse(url, &config, &id));
@@ -144,6 +165,8 @@ TEST(URI, ParseCompondQueries)
 	EXPECT_FALSE(config.showRows);
 	EXPECT_FALSE(config.showColumns);
 	EXPECT_FALSE(config.useInteger);
+	EXPECT_TRUE(config.briefMeta);
+	EXPECT_TRUE(config.prettyPrint);
 	EXPECT_STREQ(config.query.c_str(), "aabb");
 }
 

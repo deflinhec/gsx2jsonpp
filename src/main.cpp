@@ -224,43 +224,6 @@ int main(int argc, char *argv[])
 		}
 	});
 	
-	srv.Get("/timestamp", [](const Request & req, Response &res) {
-		using namespace Gxs2Json;
-		Config config; Identifier id;
-		try {
-			parse(req.target, &config, &id);
-		}
-		catch (const std::exception& e) {
-			res.set_content(e.what(), "text/plain");
-		}
-		Client cli(SPREADSHEET_HOST);
-		char buf[BUFSIZ];
-		snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
-		if (auto cli_res = cli.Get(buf))
-		{
-			if (cli_res->status == 200)
-			{
-				Content content;
-				try {
-					parse(&content, cli_res->body, config);
-					res.set_content(content.timestamp, "text/plain");
-				}
-				catch (const std::exception& e)
-				{
-					std::cout << "exception: " << e.what() << std::endl;
-				}
-			}
-			else
-			{
-				std::cout << SPREADSHEET_HOST << " connection failed: " << cli_res->status << std::endl;
-			}
-		}
-		else
-		{
-			std::cout << SPREADSHEET_HOST << " connection failed " << std::endl;
-		}
-	});
-	
 	srv.set_error_handler([](const Request & /*req*/, Response &res) {
 		const char *fmt = "<p>Error Status: <span style='color:red;'>%d</span></p>";
 		char buf[BUFSIZ];
