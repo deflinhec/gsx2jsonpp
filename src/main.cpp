@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 	{
 		struct stat buffer;
 		bool missing = stat(SERVER_CERT_FILE, &buffer);
-		if ((missing |= stat(SERVER_PRIVATE_KEY_FILE, &buffer)))
+		if ((missing |= (bool)stat(SERVER_PRIVATE_KEY_FILE, &buffer)))
 		{
 			EVP_PKEY *key = EVP_PKEY_new();
 			RSA *rsa = RSA_new();
