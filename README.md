@@ -115,7 +115,7 @@ http://example.com/api?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 
 **meta (optional - default: false)**: Setting 'meta' to true will return only meta data.
 
-**pretty (optional - default: false)**: Setting 'meta' to true will pretty print the result.
+**pretty (optional - default: false)**: Pretty print the result if sets to true.
 
 ## :bookmark: Example Response
 
