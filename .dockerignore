@@ -1,9 +1,12 @@
 .git/*
 .vscode/*
 
+# Downloaded source files
+test/googletest-src/*
+benchmark/benchmark-src/*
+
 # Executable generated files
-build/proj/*
-build/unix*/*
+build/*
 include/*
 lib/*
 bin/*
