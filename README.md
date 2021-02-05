@@ -204,6 +204,5 @@ There are three sections to the returned data.
 
 - :white_check_mark: docker image
 
-- :white_large_square: json file lockdown
-
+- :white_large_square: md5 chechsum
 
