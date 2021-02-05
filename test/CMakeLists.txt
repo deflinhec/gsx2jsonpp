@@ -38,6 +38,8 @@ add_executable(run-tests
     ${SERVER_HEADERS}
 )
 
+configure_file(ca-bundle.crt ca-bundle.crt)
+
 set(RESOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/ca-bundle.crt
 )
