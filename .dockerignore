@@ -1,4 +1,5 @@
 .git/*
+.vscode/*
 
 # Executable generated files
 build/proj/*
