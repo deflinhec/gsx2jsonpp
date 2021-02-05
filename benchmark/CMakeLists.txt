@@ -44,8 +44,3 @@ target_link_libraries(run-benchmark httplib::httplib)
 target_link_libraries(run-benchmark cxxopts::cxxopts)
 target_link_libraries(run-benchmark nlohmann_json::nlohmann_json)
 target_link_libraries(run-benchmark benchmark)
-
-install(TARGETS run-benchmark
-    RUNTIME DESTINATION bin
-    RESOURCE DESTINATION bin
-)

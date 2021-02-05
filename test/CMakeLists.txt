@@ -68,8 +68,3 @@ target_link_libraries(run-tests nlohmann_json::nlohmann_json)
 target_link_libraries(run-tests gtest_main)
 
 gtest_discover_tests(run-tests)
-
-install(TARGETS run-tests
-    RUNTIME DESTINATION bin
-    RESOURCE DESTINATION bin
-)
