@@ -35,7 +35,7 @@ TEST(SSLClient, GoogleSpreadSheet)
 {
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
 	struct stat buffer;
-	ASSERT_FALSE(stat(CA_CERT_FILE, &buffer));
+	ASSERT_FALSE(stat(CA_CERT_FILE, &buffer)) << CA_CERT_FILE << " not found";
 	SSLClient ins(SPREADSHEET_HOST);
 	ins.set_ca_cert_path(CA_CERT_FILE);
 	ins.enable_server_certificate_verification(true);
@@ -208,8 +208,8 @@ TEST_F(ParserTests, RowCompactibility)
 	const char* fmt = "/api?id=%s&sheet=%d&columns=false";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
 	auto res = ins.Get(url);
-	ASSERT_TRUE(res);
-	EXPECT_EQ(res->status, 200);
+	ASSERT_TRUE(res) << "Connection failed";
+	EXPECT_EQ(res->status, 200) << "Connection failed";
 	const char* ctype = "application/json; charset=utf-8";
 	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
 	ASSERT_FALSE(res->body.empty());
@@ -230,8 +230,8 @@ TEST_F(ParserTests, ColumnsCompactibility)
 	const char* fmt = "/api?id=%s&sheet=%d&rows=false";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
 	auto res = ins.Get(url);
-	ASSERT_TRUE(res);
-	EXPECT_EQ(res->status, 200);
+	ASSERT_TRUE(res) << "Connection failed";
+	EXPECT_EQ(res->status, 200) << "Connection failed";
 	const char* ctype = "application/json; charset=utf-8";
 	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
 	ASSERT_FALSE(res->body.empty());
@@ -252,8 +252,8 @@ TEST_F(ParserTests, QueryCompactibility)
 	const char* fmt = "/api?id=%s&sheet=%d&query=1b";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
 	auto res = ins.Get(url);
-	ASSERT_TRUE(res);
-	EXPECT_EQ(res->status, 200);
+	ASSERT_TRUE(res) << "Connection failed";
+	EXPECT_EQ(res->status, 200) << "Connection failed";
 	const char* ctype = "application/json; charset=utf-8";
 	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
 	ASSERT_FALSE(res->body.empty());
