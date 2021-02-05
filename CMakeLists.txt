@@ -124,6 +124,12 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION lib
 )
 
+if (MSVC AND _VCPKG_INSTALLED_DIR)
+    install(DIRECTORY "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin/"
+            DESTINATION bin
+            FILES_MATCHING PATTERN "*.dll" )
+endif()
+
 ###################################################
 ### Testing
 ###################################################
