@@ -45,7 +45,7 @@ In this example below I'm going to use `5000` as port, and output log file under
 
 After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/hi).
 
-Supervisor have been setup within the container to guarantee an auto restart after accidentially crashed.
+Supervisor have been setup within the container to guarantee an auto restart after accidentially crashed(hopefully not).
 
 ## :toolbox: Build from source
 
@@ -204,6 +204,5 @@ There are three sections to the returned data.
 
 - :white_check_mark: docker image
 
-- :white_large_square: json file lockdown
-
+- :white_large_square: md5 checksum
 

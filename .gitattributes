@@ -1,2 +1,4 @@
 # git should never touch line endings
 * -text
+
+*.sh text eol=lf

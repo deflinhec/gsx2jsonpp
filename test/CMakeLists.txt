@@ -32,15 +32,20 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 	include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-configure_file(ca-bundle.crt ca-bundle.crt)
-
 add_executable(run-tests
     main.cpp
     ${SERVER_SOURCES}
     ${SERVER_HEADERS}
 )
 
+configure_file(ca-bundle.crt ca-bundle.crt)
+
+set(RESOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/ca-bundle.crt
+)
+
 set_target_properties(run-tests PROPERTIES
+    RESOURCE ${RESOURCE_FILES}
 	XCODE_GENERATE_SCHEME TRUE
 	XCODE_SCHEME_WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin
 )

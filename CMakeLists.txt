@@ -35,6 +35,7 @@ endfunction(add_sources)
 ###################################################
 
 option(${PROJECT_NAME}_BUILD_TESTS "Build tests" ON)
+option(${PROJECT_NAME}_BUILD_BENCHMARK_TESTS "Build benchmark" ON)
 
 set(SERVER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/gsx2json.cpp
@@ -123,9 +124,19 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION lib
 )
 
+if (MSVC AND _VCPKG_INSTALLED_DIR)
+    install(DIRECTORY "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin/"
+            DESTINATION bin
+            FILES_MATCHING PATTERN "*.dll" )
+endif()
+
 ###################################################
 ### Testing
 ###################################################
+
+if (${PROJECT_NAME}_BUILD_BENCHMARK_TESTS)
+    add_subdirectory(benchmark)
+endif()
 
 if (${PROJECT_NAME}_BUILD_TESTS)
     enable_testing ()
