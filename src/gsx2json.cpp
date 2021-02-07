@@ -35,8 +35,13 @@ static bool is_number(const std::string& _s)
 	if (_s.empty())
 		return false;
 	
-	auto pred = [](unsigned char c) { return !std::isdigit(c); };
-	return std::find_if(_s.begin(), _s.end(), pred) == _s.end();
+	if ((!isdigit(_s[0])) && (_s[0] != '-') && (_s[0] != '+'))
+		return false;
+
+	char* p = nullptr;
+	strtol(_s.c_str(), &p, 10);
+
+	return (*p == 0);
 }
 
 void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
