@@ -31,7 +31,7 @@ using namespace nlohmann;
 
 namespace Gxs2Json
 {
-static bool is_number(const std::string& _s)
+bool is_number(const std::string& _s)
 {
 	if(_s.empty()) 
 		return false;
@@ -40,7 +40,7 @@ static bool is_number(const std::string& _s)
 		return false;
 
 	char* p = nullptr;
-	strtol(_s.c_str(), &p, 10);
+	strtod(_s.c_str(), &p);
 
 	return (*p == 0);
 }

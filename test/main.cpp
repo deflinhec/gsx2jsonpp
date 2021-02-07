@@ -170,6 +170,21 @@ TEST(URI, ParseCompondQueries)
 	EXPECT_STREQ(config.query.c_str(), "aabb");
 }
 
+TEST(Number, LiteralNumber)
+{
+	using namespace Gxs2Json;
+	EXPECT_TRUE(is_number("1"));
+	EXPECT_TRUE(is_number("0"));
+	EXPECT_TRUE(is_number("-1"));
+	EXPECT_TRUE(is_number("1.0"));
+	EXPECT_TRUE(is_number("0.0"));
+	EXPECT_TRUE(is_number("-1.0"));
+	EXPECT_FALSE(is_number("-1.0A"));
+	EXPECT_FALSE(is_number("1.0A"));
+	EXPECT_FALSE(is_number("-1A"));
+	EXPECT_FALSE(is_number("1A"));
+}
+
 class ParserTests: public ::testing::Test
 {
 protected:
