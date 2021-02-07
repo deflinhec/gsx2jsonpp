@@ -102,6 +102,7 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 	
 void parse(Content* _content, const std::string& _json, Config _cfg)
 {
+	using json = ordered_json;
 	json object, dict, rows, columns;
 	auto raw = json::parse(_json);
 	auto timestamp = raw["feed"]["updated"]["$t"];
@@ -113,17 +114,8 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 		bool queried = _cfg.query.empty();
 		for (auto it = entry.begin(); it != entry.end(); it++)
 		{
-			// left most column as key
-			if (it.key().compare("title") == 0)
-			{
-				auto value = it.value()["$t"].get<std::string>();
-				if (is_number(value))
-				{
-					pkey = std::atoi(value.c_str());
-				}
-			}
 			// seek for actual data
-			else if (it.key().rfind("gsx$", 0) == 0)
+			if (it.key().rfind("gsx$", 0) == 0)
 			{
 				auto key = it.key();
 				key = key.substr(strlen("gsx$"));
@@ -131,6 +123,10 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 				if (key.rfind("noex", 0) == 0)
 					continue;
 				auto value = it.value()["$t"].get<std::string>();
+				if (is_number(value) && pkey == 0)
+				{
+					pkey = std::atoi(value.c_str());
+				}
 				if (!_cfg.query.empty())
 				{
 					std::string lkey, lvalue, lquery;
