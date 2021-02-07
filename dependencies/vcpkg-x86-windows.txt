@@ -1,0 +1,6 @@
+--triplet
+x86-windows
+openssl
+zlib
+brotli
+dirent
