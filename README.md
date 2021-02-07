@@ -123,78 +123,94 @@ http://example.com/api?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 
 [Example spreadsheet](https://docs.google.com/spreadsheets/d/1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4/edit#gid=0)
 
-There are three sections to the returned data.
+There are four sections to the returned data.
 
 - Columns (containing the names of each column)
 - Dictionary (used left most column as primary key)
-- Rows (containing each row of data as an object.
+- Rows (containing each row of data as an object)
+- Meta (contains short brief of target data)
 
 ```
 {
+ "columns": {
+  "key": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "column1": [
+   "1b",
+   "2b",
+   "3b",
+   "4b"
+  ],
+  "column2": [
+   11,
+   22,
+   33,
+   44
+  ]
+ },
+ "rows": [
+  {
+   "key": 1,
+   "column1": "1b",
+   "column2": 11
+  },
+  {
+   "key": 2,
+   "column1": "2b",
+   "column2": 22
+  },
+  {
+   "key": 3,
+   "column1": "3b",
+   "column2": 33
+  },
+  {
+   "key": 4,
+   "column1": "4b",
+   "column2": 44
+  }
+ ],
+ "dict": {
+  "1": {
+   "key": 1,
+   "column1": "1b",
+   "column2": 11
+  },
+  "2": {
+   "key": 2,
+   "column1": "2b",
+   "column2": 22
+  },
+  "3": {
+   "key": 3,
+   "column1": "3b",
+   "column2": 33
+  },
+  "4": {
+   "key": 4,
+   "column1": "4b",
+   "column2": 44
+  }
+ },
+ "meta": {
   "columns": {
-    "column1": [
-      "1b",
-      "2b",
-      "3b",
-      "4b"
-    ],
-    "column2": [
-      11,
-      22,
-      33,
-      44
-    ],
-    "key": [
-      1,
-      2,
-      3,
-      4
-    ]
+   "md5": "EAC2F0EF3EA62CEEDD3B65B627B06CBA",
+   "bytes": 73
+  },
+  "rows": {
+   "md5": "7767981744A818A7574B4A0B8EBE1C25",
+   "bytes": 153
   },
   "dict": {
-    "1": {
-      "column1": "1b",
-      "column2": 11,
-      "key": 1
-    },
-    "2": {
-      "column1": "2b",
-      "column2": 22,
-      "key": 2
-    },
-    "3": {
-      "column1": "3b",
-      "column2": 33,
-      "key": 3
-    },
-    "4": {
-      "column1": "4b",
-      "column2": 44,
-      "key": 4
-    }
+   "md5": "76C73EAEAFC8BA2ACD890C50E20C1613",
+   "bytes": 169
   },
-  "rows": [
-    {
-      "column1": "1b",
-      "column2": 11,
-      "key": 1
-    },
-    {
-      "column1": "2b",
-      "column2": 22,
-      "key": 2
-    },
-    {
-      "column1": "3b",
-      "column2": 33,
-      "key": 3
-    },
-    {
-      "column1": "4b",
-      "column2": 44,
-      "key": 4
-    }
-  ]
+  "time": "2021-02-07T20:00:04.552Z"
+ }
 }
 
 ```
@@ -204,5 +220,5 @@ There are three sections to the returned data.
 
 - :white_check_mark: docker image
 
-- :white_large_square: md5 checksum
+- :white_check_mark: md5 checksum
 
