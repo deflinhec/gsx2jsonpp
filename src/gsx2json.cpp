@@ -24,6 +24,7 @@
 #include <iostream>
 #include <uriparser/Uri.h>
 #include <nlohmann/json.hpp>
+#include <openssl/md5.h>
 #include <exception>
 
 using namespace nlohmann;
@@ -32,7 +33,7 @@ namespace Gxs2Json
 {
 static bool is_number(const std::string& _s)
 {
-	if (_s.empty())
+	if(_s.empty()) 
 		return false;
 	
 	if ((!isdigit(_s[0])) && (_s[0] != '-') && (_s[0] != '+'))
@@ -99,7 +100,7 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 	}
 	uriFreeQueryListA(list);
 }
-	
+
 void parse(Content* _content, const std::string& _json, Config _cfg)
 {
 	using json = ordered_json;
@@ -184,12 +185,53 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 	{
 		object["dict"] = dict;
 	}
+	if (_cfg.showColumns)
+	{
+		auto buffer = columns.dump();
+		MD5_CTX ctx; MD5_Init(&ctx);
+		MD5_Update(&ctx, (unsigned char *)buffer.data(), buffer.size());
+		unsigned char md5[MD5_DIGEST_LENGTH]; MD5_Final(md5, &ctx);
+		std::string checksum; checksum.reserve(32);
+		for (std::size_t i = 0; i != 16; ++i)
+		{
+			checksum += "0123456789ABCDEF"[md5[i] / 16];
+			checksum += "0123456789ABCDEF"[md5[i] % 16];
+		}
+		object["meta"]["columns"]["md5"] = checksum;
+		object["meta"]["columns"]["bytes"] = buffer.size();
+	}
+	if (_cfg.showRows)
+	{
+		auto buffer = rows.dump();
+		MD5_CTX ctx; MD5_Init(&ctx);
+		MD5_Update(&ctx, (unsigned char *)buffer.data(), buffer.size());
+		unsigned char md5[MD5_DIGEST_LENGTH]; MD5_Final(md5, &ctx);
+		std::string checksum; checksum.reserve(32);
+		for (std::size_t i = 0; i != 16; ++i)
+		{
+			checksum += "0123456789ABCDEF"[md5[i] / 16];
+			checksum += "0123456789ABCDEF"[md5[i] % 16];
+		}
+		object["meta"]["rows"]["md5"] = checksum;
+		object["meta"]["rows"]["bytes"] = buffer.size();
+	}
+	if (_cfg.showDict)
+	{
+		auto buffer = dict.dump();
+		MD5_CTX ctx; MD5_Init(&ctx);
+		MD5_Update(&ctx, (unsigned char *)buffer.data(), buffer.size());
+		unsigned char md5[MD5_DIGEST_LENGTH]; MD5_Final(md5, &ctx);
+		std::string checksum; checksum.reserve(32);
+		for (std::size_t i = 0; i != 16; ++i)
+		{
+			checksum += "0123456789ABCDEF"[md5[i] / 16];
+			checksum += "0123456789ABCDEF"[md5[i] % 16];
+		}
+		object["meta"]["dict"]["md5"] = checksum;
+		object["meta"]["dict"]["bytes"] = buffer.size();
+	}	
 	const int indent = _cfg.prettyPrint ? 1 : -1;
 	object["meta"]["time"] = _content->timestamp;
-	auto size = _cfg.showColumns ? columns.dump(indent).length() : 0u;
-	size += _cfg.showRows ? rows.dump(indent).length() : 0u;
-	size += _cfg.showDict ? dict.dump(indent).length() : 0u;
-	object["meta"]["size"] = size;
 	_content->payload = object.dump(indent);
 }
 }
