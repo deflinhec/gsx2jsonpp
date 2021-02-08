@@ -37,7 +37,7 @@ bool is_number(const std::string& _s);
 struct Identifier
 {
 	std::string id;
-	unsigned int sheet = 0;
+	unsigned int sheet = 1;
 };
 
 struct Config
