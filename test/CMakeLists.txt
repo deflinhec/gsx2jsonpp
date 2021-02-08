@@ -38,7 +38,7 @@ add_executable(run-tests
     ${SERVER_HEADERS}
 )
 
-configure_file(ca-bundle.crt ca-bundle.crt)
+configure_file(ca-bundle.crt ca-bundle.crt COPYONLY)
 
 set(RESOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/ca-bundle.crt
@@ -49,8 +49,6 @@ set_target_properties(run-tests PROPERTIES
 	XCODE_GENERATE_SCHEME TRUE
 	XCODE_SCHEME_WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin
 )
-
-include_directories(SYSTEM "${PROJECT_BINARY_DIR}/test/prefix/include")
 
 target_include_directories(run-tests
     PUBLIC "${gtest_SOURCE_DIR}/include"

@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 #include <httplib.h>
+#include <fstream>
 #include "gsx2json.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
@@ -183,6 +184,30 @@ TEST(Number, LiteralNumber)
 	EXPECT_FALSE(is_number("1.0A"));
 	EXPECT_FALSE(is_number("-1A"));
 	EXPECT_FALSE(is_number("1A"));
+}
+
+TEST(IO, ReadAndWrite)
+{
+	Client ins(SPREADSHEET_HOST);
+	char url[BUFSIZ] = {0};
+	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, 1);
+	auto res = ins.Get(url);
+	ASSERT_TRUE(res);
+	EXPECT_EQ(res->status, 200);
+	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
+	ASSERT_FALSE(res->body.empty());
+	json object;
+	{
+		std::ofstream output("output.json");
+		output << json::parse(res->body);
+	}
+	EXPECT_TRUE(object.empty());
+	{
+		std::ifstream input("output.json");
+		input >> object;
+	}
+	EXPECT_FALSE(object.empty());
+	EXPECT_EQ(json::diff(json::parse(res->body), object).size(), 0);
 }
 
 class ParserTests: public ::testing::Test
