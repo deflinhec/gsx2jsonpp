@@ -38,8 +38,6 @@ add_executable(run-tests
     ${SERVER_HEADERS}
 )
 
-configure_file(ca-bundle.crt ca-bundle.crt COPYONLY)
-
 set(RESOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/ca-bundle.crt
 )
@@ -65,4 +63,6 @@ target_link_libraries(run-tests cxxopts::cxxopts)
 target_link_libraries(run-tests nlohmann_json::nlohmann_json)
 target_link_libraries(run-tests gtest_main)
 
-gtest_discover_tests(run-tests)
+gtest_discover_tests(run-tests
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
