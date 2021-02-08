@@ -68,7 +68,7 @@ TEST(URI, ParseIdentifier)
 	const char* fmt = "/api?id=%s&sheet=%d";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
 	using namespace Gxs2Json; Identifier id;
-	EXPECT_EQ(id.sheet, 0);
+	EXPECT_EQ(id.sheet, 1);
 	EXPECT_TRUE(id.id.empty());
 	EXPECT_NO_THROW(parse(url, nullptr, &id));
 	EXPECT_STREQ(id.id.c_str(), SpreadsheetID);
@@ -150,7 +150,7 @@ TEST(URI, ParseCompondQueries)
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
 	using namespace Gxs2Json;
 	Config config; Identifier id;
-	EXPECT_EQ(id.sheet, 0);
+	EXPECT_EQ(id.sheet, 1);
 	EXPECT_TRUE(id.id.empty());
 	EXPECT_TRUE(config.showDict);
 	EXPECT_TRUE(config.showRows);
