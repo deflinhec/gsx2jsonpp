@@ -25,6 +25,7 @@
 #include <httplib.h>
 #include <fstream>
 #include "gsx2json.h"
+#include "cache.h"
 #include "utils.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
@@ -190,7 +191,7 @@ TEST(Number, LiteralNumber)
 class IOTests: public ::testing::Test
 {
 protected:
-   
+  
     virtual void SetUp();
 
 	virtual void TearDown();
@@ -215,18 +216,64 @@ void IOTests::SetUp()
 }
 
 void IOTests::TearDown()
-	{
+{
 	remove(filename.c_str());
-	}
+}
 
 TEST_F(IOTests, ReadAndParse)
 {
 	json object;
 	EXPECT_TRUE(object.empty());
 	std::ifstream input(filename);
-		input >> object;
+	input >> object;
 	EXPECT_FALSE(object.empty());
 	EXPECT_EQ(json::diff(Object, object).size(), 0);
+}
+
+TEST_F(IOTests, LoadFromMemory)
+{
+	using namespace Gxs2Json; 
+	Content content; 
+	Identifier id;
+	id.sheet = 1;
+	id.id = SpreadsheetID;
+	json object;
+	std::string gsxcontent;
+	using Type = Cache::Manager::Type;
+	Cache::Manager manager(Type::MEMORY);
+	EXPECT_NO_THROW(manager.save(Object.dump(), id));
+	EXPECT_NO_THROW(manager.load(gsxcontent, id));
+	EXPECT_NO_THROW(object = json::parse(gsxcontent));
+	EXPECT_EQ(json::diff(Object, object).size(), 0);
+	EXPECT_NO_THROW(parse(&content, gsxcontent));
+	ASSERT_FALSE(content.payload.empty());
+}
+
+TEST_F(IOTests, ThreadSafeLoadFromMemory)
+{
+	using namespace Gxs2Json; 
+	using Type = Cache::Manager::Type;
+	Cache::Manager manager(Type::MEMORY);
+	std::thread threads[100];
+    for (int i = 0; i != 100; i++)
+    {
+        threads[i] = std::thread([&]{
+			Content content; 
+			Identifier id;
+			id.sheet = 1;
+			id.id = SpreadsheetID;
+			std::string gsxcontent;
+			json object;
+			EXPECT_NO_THROW(manager.save(Object.dump(), id));
+			EXPECT_NO_THROW(manager.load(gsxcontent, id));
+			EXPECT_NO_THROW(object = json::parse(gsxcontent));
+			EXPECT_EQ(json::diff(Object, object).size(), 0);
+			EXPECT_NO_THROW(parse(&content, gsxcontent));
+			ASSERT_FALSE(content.payload.empty());
+		});
+    }
+    for (auto &task : threads)
+        task.join();
 }
 
 class ParserTests: public ::testing::Test
