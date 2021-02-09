@@ -23,6 +23,7 @@
 #include "cache.h"
 #include "gsx2json.h"
 #include "utils.h"
+#include <sys/stat.h>
 #include <nlohmann/json.hpp>
 #include <dirent.h>
 #include <zlib.h>
