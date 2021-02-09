@@ -380,7 +380,7 @@ TEST_F(ParserTests, RowCompactibility)
     }
     else
     {
-        SUCCEED() << "Service unavailable: " << res->status;
+        GTEST_SKIP() << "Service unavailable: " << res->status;
     }
 }
 
@@ -408,7 +408,7 @@ TEST_F(ParserTests, ColumnsCompactibility)
     }
     else
     {
-        SUCCEED() << "Service unavailable: " << res->status;
+        GTEST_SKIP() << "Service unavailable: " << res->status;
     }
 }
 
@@ -439,6 +439,6 @@ TEST_F(ParserTests, QueryCompactibility)
     }
     else
     {
-        SUCCEED() << "Service unavailable: " << res->status;
+        GTEST_SKIP() << "Service unavailable: " << res->status;
     }
 }
