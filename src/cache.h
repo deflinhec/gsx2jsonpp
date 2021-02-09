@@ -38,6 +38,8 @@ struct Impl
     virtual void save(const std::string& _json, const Identifier& _id) = 0;
 
     virtual void load(std::string& _content, const Identifier& _id) const = 0;
+
+    virtual void flush() = 0;
 };
 
 class Manager
@@ -53,6 +55,8 @@ public:
     void save(const std::string& _json, const Identifier& _id);
 
     bool load(std::string& _json, const Identifier& _id) const;
+
+    void flush();
 
 private:
     mutable std::mutex Mutex;

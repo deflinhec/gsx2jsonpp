@@ -247,6 +247,7 @@ TEST_F(IOTests, LoadFromMemory)
 	EXPECT_EQ(json::diff(Object, object).size(), 0);
 	EXPECT_NO_THROW(parse(&content, gsxcontent));
 	ASSERT_FALSE(content.payload.empty());
+	EXPECT_NO_THROW(manager.flush());
 }
 
 TEST_F(IOTests, ThreadSafeLoadFromMemory)
@@ -274,6 +275,55 @@ TEST_F(IOTests, ThreadSafeLoadFromMemory)
     }
     for (auto &task : threads)
         task.join();
+	EXPECT_NO_THROW(manager.flush());
+}
+
+TEST_F(IOTests, LoadFromFile)
+{
+	using namespace Gxs2Json; 
+	Content content; 
+	Identifier id;
+	id.sheet = 1;
+	id.id = SpreadsheetID;
+	json object;
+	std::string gsxcontent;
+	using Type = Cache::Manager::Type;
+	Cache::Manager manager(Type::FILE);
+	EXPECT_NO_THROW(manager.save(Object.dump(), id));
+	EXPECT_NO_THROW(manager.load(gsxcontent, id));
+	EXPECT_NO_THROW(object = json::parse(gsxcontent));
+	EXPECT_EQ(json::diff(Object, object).size(), 0);
+	EXPECT_NO_THROW(parse(&content, gsxcontent));
+	ASSERT_FALSE(content.payload.empty());
+	EXPECT_NO_THROW(manager.flush());
+}
+
+TEST_F(IOTests, ThreadSafeLoadFromFile)
+{
+	using namespace Gxs2Json; 
+	using Type = Cache::Manager::Type;
+	Cache::Manager manager(Type::FILE);
+	std::thread threads[100];
+    for (int i = 0; i != 100; i++)
+    {
+        threads[i] = std::thread([&]{
+			Content content; 
+			Identifier id;
+			id.sheet = 1;
+			id.id = SpreadsheetID;
+			std::string gsxcontent;
+			json object;
+			EXPECT_NO_THROW(manager.save(Object.dump(), id));
+			EXPECT_NO_THROW(manager.load(gsxcontent, id));
+			EXPECT_NO_THROW(object = json::parse(gsxcontent));
+			EXPECT_EQ(json::diff(Object, object).size(), 0);
+			EXPECT_NO_THROW(parse(&content, gsxcontent));
+			ASSERT_FALSE(content.payload.empty());
+		});
+    }
+    for (auto &task : threads)
+        task.join();
+	EXPECT_NO_THROW(manager.flush());
 }
 
 class ParserTests: public ::testing::Test

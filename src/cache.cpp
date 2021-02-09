@@ -27,6 +27,7 @@
 #include <dirent.h>
 #include <zlib.h>
 #include <fstream>
+#include <set>
 
 using namespace nlohmann;
 
@@ -40,6 +41,8 @@ struct FileImpl : public Impl
     virtual void save(const std::string& _json, const Identifier& _id);
 
     virtual void load(std::string& _content, const Identifier& _id) const;
+
+    virtual void flush();
 };
 
 struct MemoryImpl : public Impl
@@ -47,6 +50,8 @@ struct MemoryImpl : public Impl
     virtual void save(const std::string& _json, const Identifier& _id);
 
     virtual void load(std::string& _content, const Identifier& _id) const;
+
+    virtual void flush();
 
     std::map<unsigned, std::string> Objects;
 };
@@ -79,6 +84,27 @@ void FileImpl::load(std::string& _content, const Identifier& _id) const
     _content = object.dump();
 }
 
+void FileImpl::flush()
+{
+    DIR* dir;
+    struct dirent *ent;
+    std::set<std::string> files;
+    if ((dir = opendir("./")) != nullptr) 
+    {
+        while ((ent = readdir(dir)) != nullptr) 
+        {
+            std::string name = ent->d_name;
+            if (name.find(".json") != std::string::npos)
+                files.insert(name);
+        }
+        closedir(dir);
+    }
+    for (const auto& file : files)
+    {
+        remove(file.c_str());
+    }
+}
+
 void MemoryImpl::save(const std::string& _json, const Identifier& _id)
 {
     std::string name = _id.id + "_";
@@ -103,6 +129,11 @@ void MemoryImpl::load(std::string& _content, const Identifier& _id) const
         return;
     
     _content = it->second;
+}
+
+void MemoryImpl::flush()
+{
+    Objects.clear();
 }
 
 Manager::Manager(const Type& _type)
@@ -135,6 +166,14 @@ bool Manager::load(std::string& _json, const Identifier& _id) const
     std::lock_guard<std::mutex> lock(Mutex);
     Implement->load(_json, _id);
     return !_json.empty();
+}
+
+void Manager::flush()
+{
+    if (Implement == nullptr)
+        return;
+    std::lock_guard<std::mutex> lock(Mutex);
+    Implement->flush();
 }
 }
 }
