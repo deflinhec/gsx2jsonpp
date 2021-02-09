@@ -32,8 +32,6 @@
 namespace Gxs2Json
 {
 
-bool is_number(const std::string& _s);
-
 struct Identifier
 {
 	std::string id;
