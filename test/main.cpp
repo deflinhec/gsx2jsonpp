@@ -25,6 +25,7 @@
 #include <httplib.h>
 #include <fstream>
 #include "gsx2json.h"
+#include "utils.h"
 
 #define CA_CERT_FILE "./ca-bundle.crt"
 using namespace httplib;

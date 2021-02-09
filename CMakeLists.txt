@@ -39,9 +39,11 @@ option(${PROJECT_NAME}_BUILD_BENCHMARK_TESTS "Build benchmark" ON)
 
 set(SERVER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/gsx2json.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/utils.cpp
 )
 set(SERVER_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/gsx2json.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/utils.h
 )
 set(RESOURCE_FILES
     cpp-httplib/example/ca-bundle.crt

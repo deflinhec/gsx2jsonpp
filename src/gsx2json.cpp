@@ -21,6 +21,7 @@
 */
 
 #include "gsx2json.h"
+#include "utils.h"
 #include <iostream>
 #include <uriparser/Uri.h>
 #include <nlohmann/json.hpp>
@@ -31,19 +32,6 @@ using namespace nlohmann;
 
 namespace Gxs2Json
 {
-bool is_number(const std::string& _s)
-{
-	if(_s.empty()) 
-		return false;
-	
-	if ((!isdigit(_s[0])) && (_s[0] != '-') && (_s[0] != '+'))
-		return false;
-
-	char* p = nullptr;
-	strtod(_s.c_str(), &p);
-
-	return (*p == 0);
-}
 
 void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 {
