@@ -69,7 +69,7 @@ TEST(URI, ParseIdentifier)
 	char url[BUFSIZ] = {0};
 	const char* fmt = "/api?id=%s&sheet=%d";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
-	using namespace Gxs2Json; Identifier id;
+	using namespace Gsx2Json; Identifier id;
 	EXPECT_EQ(id.sheet, 1);
 	EXPECT_TRUE(id.id.empty());
 	EXPECT_NO_THROW(parse(url, nullptr, &id));
@@ -82,7 +82,7 @@ TEST(URI, ParseConfigShowColumns)
 	char url[BUFSIZ] = {0};
 	const char* fmt = "/api?columns=false";
 	snprintf(url, sizeof(url), fmt, "");
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_TRUE(config.showColumns);
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_FALSE(config.showColumns);
@@ -91,7 +91,7 @@ TEST(URI, ParseConfigShowColumns)
 TEST(URI, ParseConfigShowRows)
 {
 	const char* url = "/api?rows=false";
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_TRUE(config.showRows);
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_FALSE(config.showRows);
@@ -100,7 +100,7 @@ TEST(URI, ParseConfigShowRows)
 TEST(URI, ParseConfigShowDict)
 {
 	const char* url = "/api?dict=false";
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_TRUE(config.showDict);
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_FALSE(config.showDict);
@@ -109,7 +109,7 @@ TEST(URI, ParseConfigShowDict)
 TEST(URI, ParseConfigShowMeta)
 {
 	const char* url = "/api?meta=true";
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_FALSE(config.briefMeta);
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_TRUE(config.briefMeta);
@@ -118,7 +118,7 @@ TEST(URI, ParseConfigShowMeta)
 TEST(URI, ParseConfigPrettyPrint)
 {
 	const char* url = "/api?pretty=true";
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_FALSE(config.prettyPrint);
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_TRUE(config.prettyPrint);
@@ -127,7 +127,7 @@ TEST(URI, ParseConfigPrettyPrint)
 TEST(URI, ParseConfigUseInteger)
 {
 	const char* url = "/api?integers=false";
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_TRUE(config.useInteger);
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_FALSE(config.useInteger);
@@ -136,7 +136,7 @@ TEST(URI, ParseConfigUseInteger)
 TEST(URI, ParseConfigQuerySearch)
 {
 	const char* url = "/api?q=aabb";
-	using namespace Gxs2Json; Config config;
+	using namespace Gsx2Json; Config config;
 	EXPECT_TRUE(config.query.empty());
 	EXPECT_NO_THROW(parse(url, &config));
 	EXPECT_STREQ(config.query.c_str(), "aabb");
@@ -150,7 +150,7 @@ TEST(URI, ParseCompondQueries)
 	"&columns=false&rows=false&id=%s&sheet=%d"
 	"&pretty=true&meta=true";
 	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
-	using namespace Gxs2Json;
+	using namespace Gsx2Json;
 	Config config; Identifier id;
 	EXPECT_EQ(id.sheet, 1);
 	EXPECT_TRUE(id.id.empty());
@@ -175,7 +175,7 @@ TEST(URI, ParseCompondQueries)
 
 TEST(Number, LiteralNumber)
 {
-	using namespace Gxs2Json;
+	using namespace Gsx2Json;
 	EXPECT_TRUE(is_number("1"));
 	EXPECT_TRUE(is_number("0"));
 	EXPECT_TRUE(is_number("-1"));
@@ -232,7 +232,7 @@ TEST_F(IOTests, ReadAndParse)
 
 TEST_F(IOTests, LoadFromMemory)
 {
-	using namespace Gxs2Json; 
+	using namespace Gsx2Json; 
 	Content content; 
 	Identifier id;
 	id.sheet = 1;
@@ -252,7 +252,7 @@ TEST_F(IOTests, LoadFromMemory)
 
 TEST_F(IOTests, ThreadSafeLoadFromMemory)
 {
-	using namespace Gxs2Json; 
+	using namespace Gsx2Json; 
 	using Type = Cache::Manager::Type;
 	Cache::Manager manager(Type::MEMORY);
 	std::thread threads[100];
@@ -280,7 +280,7 @@ TEST_F(IOTests, ThreadSafeLoadFromMemory)
 
 TEST_F(IOTests, LoadFromFile)
 {
-	using namespace Gxs2Json; 
+	using namespace Gsx2Json; 
 	Content content; 
 	Identifier id;
 	id.sheet = 1;
@@ -300,7 +300,7 @@ TEST_F(IOTests, LoadFromFile)
 
 TEST_F(IOTests, ThreadSafeLoadFromFile)
 {
-	using namespace Gxs2Json; 
+	using namespace Gsx2Json; 
 	using Type = Cache::Manager::Type;
 	Cache::Manager manager(Type::FILE);
 	std::thread threads[100];
@@ -351,7 +351,7 @@ void ParserTests::SetUp()
 TEST_F(ParserTests, ToJson)
 {
 	ASSERT_FALSE(GsxContent.empty());
-	using namespace Gxs2Json; Content content;
+	using namespace Gsx2Json; Content content;
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
 	ASSERT_FALSE(content.payload.empty());
 }
@@ -369,7 +369,7 @@ TEST_F(ParserTests, RowCompactibility)
 	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
 	ASSERT_FALSE(res->body.empty());
 	auto a = json::parse(res->body);
-	using namespace Gxs2Json; Content content;
+	using namespace Gsx2Json; Content content;
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
 	auto b = json::parse(content.payload);
 	ASSERT_FALSE(content.payload.empty());
@@ -391,7 +391,7 @@ TEST_F(ParserTests, ColumnsCompactibility)
 	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
 	ASSERT_FALSE(res->body.empty());
 	auto a = json::parse(res->body);
-	using namespace Gxs2Json; Content content;
+	using namespace Gsx2Json; Content content;
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
 	auto b = json::parse(content.payload);
 	ASSERT_FALSE(content.payload.empty());
@@ -413,7 +413,7 @@ TEST_F(ParserTests, QueryCompactibility)
 	ASSERT_EQ(res->get_header_value("Content-Type"), ctype);
 	ASSERT_FALSE(res->body.empty());
 	auto a = json::parse(res->body);
-	using namespace Gxs2Json; Content content;
+	using namespace Gsx2Json; Content content;
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
 	auto b = json::parse(content.payload);
 	ASSERT_FALSE(content.payload.empty());

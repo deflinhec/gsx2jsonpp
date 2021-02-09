@@ -29,7 +29,7 @@
 
 using namespace nlohmann;
 
-namespace Gxs2Json
+namespace Gsx2Json
 {
 
 void parse(const std::string& _uri, Config* _cfg, Identifier* _id)

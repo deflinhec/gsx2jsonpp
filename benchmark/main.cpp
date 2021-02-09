@@ -248,7 +248,7 @@ static const char* Sample = u8R"(
 
 static void BM_ConfigRow(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.showColumns = false;
     config.showDict = false;
@@ -268,7 +268,7 @@ BENCHMARK(BM_ConfigRow);
 
 static void BM_ConfigDict(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.showColumns = false;
     config.showRows = false;
@@ -288,7 +288,7 @@ BENCHMARK(BM_ConfigDict);
 
 static void BM_ConfigColumn(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.showDict = false;
     config.showRows = false;
@@ -308,7 +308,7 @@ BENCHMARK(BM_ConfigColumn);
 
 static void BM_ConfigDefault(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     for (auto _ : state)
     {
@@ -326,7 +326,7 @@ BENCHMARK(BM_ConfigDefault);
 
 static void BM_ConfigRowMeta(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.briefMeta = true;
     config.showColumns = false;
@@ -347,7 +347,7 @@ BENCHMARK(BM_ConfigRowMeta);
 
 static void BM_ConfigDictMeta(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.briefMeta = true;
     config.showColumns = false;
@@ -368,7 +368,7 @@ BENCHMARK(BM_ConfigDictMeta);
 
 static void BM_ConfigColumnMeta(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.briefMeta = true;
     config.showDict = false;
@@ -389,7 +389,7 @@ BENCHMARK(BM_ConfigColumnMeta);
 
 static void BM_ConfigDefaultMeta(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.briefMeta = true;
     for (auto _ : state)
@@ -408,7 +408,7 @@ BENCHMARK(BM_ConfigDefaultMeta);
 
 static void BM_ConfigRowPretty(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.prettyPrint = true;
     config.showColumns = false;
@@ -429,7 +429,7 @@ BENCHMARK(BM_ConfigRowPretty);
 
 static void BM_ConfigDictPretty(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.prettyPrint = true;
     config.showColumns = false;
@@ -450,7 +450,7 @@ BENCHMARK(BM_ConfigDictPretty);
 
 static void BM_ConfigColumnPretty(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.prettyPrint = true;
     config.showDict = false;
@@ -471,7 +471,7 @@ BENCHMARK(BM_ConfigColumnPretty);
 
 static void BM_ConfigDefaultPretty(benchmark::State& state) 
 {
-    using namespace Gxs2Json; 
+    using namespace Gsx2Json; 
     Config config;
     config.prettyPrint = true;
     for (auto _ : state)

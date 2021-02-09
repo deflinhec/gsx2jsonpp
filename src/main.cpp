@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 	});
 	
 	srv.Get("/api", [](const Request & req, Response &res) {
-		using namespace Gxs2Json;
+		using namespace Gsx2Json;
 		Config config; Identifier id;
 		try {
 			parse(req.target, &config, &id);

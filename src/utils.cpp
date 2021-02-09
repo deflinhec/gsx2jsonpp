@@ -25,7 +25,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-namespace Gxs2Json
+namespace Gsx2Json
 {
 
 bool is_number(const std::string& _s)

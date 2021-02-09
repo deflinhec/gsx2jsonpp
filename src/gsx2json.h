@@ -29,7 +29,7 @@
 #define SPREADSHEET_HOST "spreadsheet.google.com"
 #define SPREADSHEET_URI_FORMAT "/feeds/list/%s/%d/public/values?alt=json"
 
-namespace Gxs2Json
+namespace Gsx2Json
 {
 
 struct Identifier

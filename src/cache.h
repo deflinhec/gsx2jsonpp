@@ -26,7 +26,7 @@
 #include <memory>
 #include <mutex>
 
-namespace Gxs2Json
+namespace Gsx2Json
 {
 struct Config;
 struct Content;

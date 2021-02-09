@@ -32,7 +32,7 @@
 
 using namespace nlohmann;
 
-namespace Gxs2Json
+namespace Gsx2Json
 {
 namespace Cache
 {
