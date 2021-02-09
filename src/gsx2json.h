@@ -29,15 +29,13 @@
 #define SPREADSHEET_HOST "spreadsheet.google.com"
 #define SPREADSHEET_URI_FORMAT "/feeds/list/%s/%d/public/values?alt=json"
 
-namespace Gxs2Json
+namespace Gsx2Json
 {
-
-bool is_number(const std::string& _s);
 
 struct Identifier
 {
 	std::string id;
-	unsigned int sheet = 0;
+	unsigned int sheet = 1;
 };
 
 struct Config
@@ -55,7 +53,6 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id = nullptr);
 
 struct Content
 {
-	std::string timestamp;
 	std::string payload;
 };
 

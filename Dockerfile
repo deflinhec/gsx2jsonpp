@@ -9,12 +9,14 @@ RUN apk --no-cache add bash \
 	zlib-dev \
     supervisor
 
-ENV CC=gcc CXX=g++ TZ=Asia/Taipei
-EXPOSE 8080
-
 COPY . /project
 WORKDIR /project
-RUN /bin/bash scripts/build.sh Release
+RUN export CC=gcc CXX=g++ && \
+    /bin/bash scripts/build.sh Release
+
+EXPOSE 8080
+ENV TZ=Asia/Taipei \
+    ARGUMENTS="--host 0.0.0.0"
 
 COPY supervisor.conf /etc/supervisor.conf
 CMD ["supervisord", "-c", "/etc/supervisor.conf"]

@@ -20,7 +20,8 @@ if [[ ${BUILD_TYPE} == *"Release"* ]]; then
   -DCMAKE_INSTALL_PREFIX=${PWD} \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_LIBDIR=${PWD}/lib/Release
-  cmake --build ${PWD}/build/unix --target install test
+  cmake --build ${PWD}/build/unix --target install
+  cd ${PWD}/build/unix && ctest -C Debug --verbose
 fi
 
 if [[ ${BUILD_TYPE} == *"Debug"* ]]; then
@@ -29,7 +30,8 @@ if [[ ${BUILD_TYPE} == *"Debug"* ]]; then
   -DCMAKE_INSTALL_PREFIX=${PWD}/ \
   -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_INSTALL_LIBDIR=${PWD}/lib/Debug
-  cmake --build ${PWD}/build/unix-d --target install test
+  cmake --build ${PWD}/build/unix-d --target install
+  cd ${PWD}/build/unix-d && ctest -C Debug --verbose
 fi
 
 case "$(uname)" in

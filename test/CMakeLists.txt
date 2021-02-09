@@ -38,8 +38,6 @@ add_executable(run-tests
     ${SERVER_HEADERS}
 )
 
-configure_file(ca-bundle.crt ca-bundle.crt)
-
 set(RESOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/ca-bundle.crt
 )
@@ -49,8 +47,6 @@ set_target_properties(run-tests PROPERTIES
 	XCODE_GENERATE_SCHEME TRUE
 	XCODE_SCHEME_WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin
 )
-
-include_directories(SYSTEM "${PROJECT_BINARY_DIR}/test/prefix/include")
 
 target_include_directories(run-tests
     PUBLIC "${gtest_SOURCE_DIR}/include"
@@ -67,4 +63,6 @@ target_link_libraries(run-tests cxxopts::cxxopts)
 target_link_libraries(run-tests nlohmann_json::nlohmann_json)
 target_link_libraries(run-tests gtest_main)
 
-gtest_discover_tests(run-tests)
+gtest_discover_tests(run-tests
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
