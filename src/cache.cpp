@@ -39,11 +39,15 @@ namespace Cache
 
 struct FileImpl : public Impl
 {
+    FileImpl();
+
     virtual void save(const std::string& _json, const Identifier& _id);
 
     virtual void load(std::string& _content, const Identifier& _id) const;
 
     virtual void flush();
+
+    const std::string Folder = "cache/";
 };
 
 struct MemoryImpl : public Impl
@@ -57,15 +61,21 @@ struct MemoryImpl : public Impl
     std::map<unsigned, std::string> Objects;
 };
 
+FileImpl::FileImpl()
+{
+    mkdir(Folder.c_str(), 0777);
+}
+
 void FileImpl::save(const std::string& _json, const Identifier& _id)
 {
     std::string name = _id.id + "_";
     name += std::to_string(_id.sheet);
     name += ".json";
+    const std::string filepath = Folder + name;
     
     Config config;
     Content content;
-    std::ofstream output(name);
+    std::ofstream output(filepath);
     output << json::parse(_json);
 }
 
@@ -74,13 +84,14 @@ void FileImpl::load(std::string& _content, const Identifier& _id) const
     std::string name = _id.id + "_";
     name += std::to_string(_id.sheet);
     name += ".json";
+    const std::string filepath = Folder + name;
 
     struct stat buffer;
-    if (stat(name.c_str(), &buffer) != 0)
+    if (stat(filepath.c_str(), &buffer) != 0)
         return;
 
     json object;
-    std::ifstream input(name);
+    std::ifstream input(filepath);
     input >> object;
     _content = object.dump();
 }
@@ -90,13 +101,12 @@ void FileImpl::flush()
     DIR* dir;
     struct dirent *ent;
     std::set<std::string> files;
-    if ((dir = opendir("./")) != nullptr) 
+    const std::string directory = "./" + Folder;
+    if ((dir = opendir(directory.c_str())) != nullptr) 
     {
         while ((ent = readdir(dir)) != nullptr) 
         {
-            std::string name = ent->d_name;
-            if (name.find(".json") != std::string::npos)
-                files.insert(name);
+            files.insert(Folder + ent->d_name);
         }
         closedir(dir);
     }

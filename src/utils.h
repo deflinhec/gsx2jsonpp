@@ -31,4 +31,6 @@ bool is_number(const std::string& _s);
 
 std::string md5(const std::string& _s);
 
+int mkdir(const char* _dir, int _mode);
+
 }

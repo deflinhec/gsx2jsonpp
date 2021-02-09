@@ -22,6 +22,8 @@
 
 #include "utils.h"
 #include <openssl/md5.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 namespace Gxs2Json
 {
@@ -52,6 +54,18 @@ std::string md5(const std::string& _s)
 		checksum += "0123456789ABCDEF"[md5[i] % 16];
 	}
 	return checksum;
+}
+
+int mkdir(const char* _dir, int _mode)
+{
+	int result = 0;
+#if defined(_WIN32)
+    CreateDirectoryA(_dir, NULL);
+	result = GetLastError();
+#else
+    result = ::mkdir(_dir, _mode);
+#endif
+	return result;
 }
 
 }
