@@ -28,7 +28,10 @@ In this example below I'm going to use `5000` as port, and output log file under
     ```
     
     ```
-    docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
+    docker run -it -d --expose 5000 \
+    -v ${PWD}/bin/volume:/workspace \
+    -e ARGUMENTS="--host 0.0.0.0 --port 5000" \
+    --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
     ```
 
 - Launch with a local image
@@ -40,8 +43,27 @@ In this example below I'm going to use `5000` as port, and output log file under
     ```
     
     ```
-    docker run -it -d -p 5000:8080 -v bin/volume:/workspace --name gsx2jsonpp gsx2jsonpp
+    docker run -it -d --expose 5000 \ 
+    -v ${PWD}/bin/volume:/workspace \
+    -e ARGUMENTS="--host 0.0.0.0 --port 5000" \
+    --name gsx2jsonpp gsx2jsonpp
     ```
+
+    Avaliable arguments: 
+    - -p, --port
+    - --host 
+
+    - --cache (file|memory)
+
+      Cache mode is disabled by default, this feature allows client
+      to query on specific data version. When cache is configure with
+      file mode, cache file will be preserve under 'cache/' folder. 
+
+    - --ssl (true|false)
+
+      SSL mode is disabled by default, if you prefer using SSL mode
+      with your certification and private key. Copy your files into
+      `${PWD}/bin/volume` and rename as `cert.pem, key.pem`.
 
 After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/hi).
 
@@ -204,5 +226,7 @@ There are three sections to the returned data.
 
 - :white_check_mark: docker image
 
-- :white_large_square: md5 checksum
+- :white_check_mark: md5 checksum
+
+- :white_check_mark: cache
 
