@@ -27,6 +27,7 @@
 #include <cxxopts.hpp>
 #include <uriparser/Uri.h>
 #include "gsx2json.h"
+#include "cache.h"
 
 #define SERVER_CERT_FILE "./cert.pem"
 #define SERVER_PRIVATE_KEY_FILE "./key.pem"
@@ -93,14 +94,22 @@ int main(int argc, char *argv[])
 	responsed from spreadsheet.google.com.
 	
 	SSL mode:
+		- Avaliable arguments: true, false
 		SSL mode is disabled by default, if you prefer using SSL mode
 		with your certification and private key. Copy your files right
 		next to Gsx2Jsonpp and rename as `cert.pem, key.pem`.
+	
+	Cache mode:
+		- Avaliable arguments: file, memory
+		Cache mode is disabled by default, This feature allows client
+		to query on specific data version. When cache is configure with
+		file mode, cache file will be preserve under 'cache/' folder. 
 	)";
 	cxxopts::Options options("Gsx2Jsonpp", descp);
 	
 	options.add_options()
 		("ssl", "SSL mode", cxxopts::value<bool>()->default_value("false"))
+		("cache", "Cache mode", cxxopts::value<std::string>()->default_value("none"))
 		("host", "Host", cxxopts::value<std::string>()->default_value("localhost"))
 		("p,port", "Port", cxxopts::value<unsigned short>()->default_value("8080"))
 		("h,help", "Print usage")
@@ -178,16 +187,32 @@ int main(int argc, char *argv[])
 		std::cout << "server has an error..." << std::endl;
 		return -1;
 	}
+
+	typedef Gsx2Json::Cache::Manager CacheManager;
+	std::unique_ptr<CacheManager> cache_manager;
+	if (result.count("cache"))
+	{
+		auto mode = result["cache"].as<std::string>();	
+		if (mode == "file")
+		{
+			cache_manager = std::make_unique<CacheManager>(CacheManager::Type::FILE);
+		}
+		else if (mode == "memory")
+		{
+			cache_manager = std::make_unique<CacheManager>(CacheManager::Type::MEMORY);
+		}
+		std::cout << "cache mode: " << mode << std::endl;
+	}
 	
-	srv.Get("/", [=](const Request & /*req*/, Response &res) {
+	srv.Get("/", [](const Request & /*req*/, Response &res) {
 		res.set_redirect("/hi");
 	});
 	
 	srv.Get("/hi", [](const Request & /*req*/, Response &res) {
 		res.set_content("Hello World!\n", "text/plain");
 	});
-	
-	srv.Get("/api", [](const Request & req, Response &res) {
+
+	srv.Get("/api", [&](const Request & req, Response &res) {
 		using namespace Gsx2Json;
 		Config config; Identifier id;
 		try {
@@ -195,32 +220,42 @@ int main(int argc, char *argv[])
 		}
 		catch (const std::exception& e) {
 			res.set_content(e.what(), "text/plain");
+			return;
 		}
-		Client cli(SPREADSHEET_HOST);
-		char buf[BUFSIZ];
-		snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
-		if (auto cli_res = cli.Get(buf))
+		std::string result;
+		if (!cache_manager || !cache_manager->load(result, id))
 		{
-			if (cli_res->status == 200)
+			char buf[BUFSIZ];
+			snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
+			Client cli(SPREADSHEET_HOST);
+			if (auto res = cli.Get(buf))
 			{
-				Content content;
-				try {
-					parse(&content, cli_res->body, config);
-					res.set_content(content.payload, "application/json");
-				}
-				catch (const std::exception& e)
+				if (res->status == 200)
 				{
-					std::cout << "exception: " << e.what() << std::endl;
+					result = std::move(res->body);
+					if (cache_manager)
+					{
+						cache_manager->save(result, id);
+					}
+				}
+				else
+				{
+					std::cout << SPREADSHEET_HOST << " connection failed: " << res->status << std::endl;
 				}
 			}
 			else
 			{
-				std::cout << SPREADSHEET_HOST << " connection failed: " << cli_res->status << std::endl;
+				std::cout << SPREADSHEET_HOST << " connection failed " << std::endl;
 			}
 		}
-		else
+		try {
+			Content content;
+			parse(&content, result, config);
+			res.set_content(content.payload, "application/json");
+		}
+		catch (const std::exception& e)
 		{
-			std::cout << SPREADSHEET_HOST << " connection failed " << std::endl;
+			std::cout << "exception: " << e.what() << std::endl;
 		}
 	});
 	
