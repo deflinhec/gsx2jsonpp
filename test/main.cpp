@@ -437,4 +437,8 @@ TEST_F(ParserTests, QueryCompactibility)
         EXPECT_FALSE(b["columns"].empty());
         EXPECT_EQ(json::diff(a["columns"], b["columns"]).size(), 0);
     }
+    else
+    {
+        SUCCEED() << "Service unavailable: " << res->status;
+    }
 }
