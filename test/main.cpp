@@ -187,7 +187,19 @@ TEST(Number, LiteralNumber)
 	EXPECT_FALSE(is_number("1A"));
 }
 
-TEST(IO, ReadAndWrite)
+class IOTests: public ::testing::Test
+{
+protected:
+   
+    virtual void SetUp();
+
+	virtual void TearDown();
+   
+   	json Object;
+	std::string filename = "output.json";
+};
+
+void IOTests::SetUp()
 {
 	Client ins(SPREADSHEET_HOST);
 	char url[BUFSIZ] = {0};
@@ -197,18 +209,24 @@ TEST(IO, ReadAndWrite)
 	EXPECT_EQ(res->status, 200);
 	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
 	ASSERT_FALSE(res->body.empty());
+	EXPECT_NO_THROW(Object = json::parse(res->body));
+	std::ofstream output(filename);
+	output << Object;
+}
+
+void IOTests::TearDown()
+	{
+	remove(filename.c_str());
+	}
+
+TEST_F(IOTests, ReadAndParse)
+{
 	json object;
-	{
-		std::ofstream output("output.json");
-		output << json::parse(res->body);
-	}
 	EXPECT_TRUE(object.empty());
-	{
-		std::ifstream input("output.json");
+	std::ifstream input(filename);
 		input >> object;
-	}
 	EXPECT_FALSE(object.empty());
-	EXPECT_EQ(json::diff(json::parse(res->body), object).size(), 0);
+	EXPECT_EQ(json::diff(Object, object).size(), 0);
 }
 
 class ParserTests: public ::testing::Test
