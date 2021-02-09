@@ -237,7 +237,6 @@ TEST_F(ParserTests, ToJson)
 	ASSERT_FALSE(GsxContent.empty());
 	using namespace Gxs2Json; Content content;
 	EXPECT_NO_THROW(parse(&content, GsxContent.c_str()));
-	ASSERT_FALSE(content.timestamp.empty());
 	ASSERT_FALSE(content.payload.empty());
 }
 

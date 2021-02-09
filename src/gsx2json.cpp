@@ -106,8 +106,6 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 	using json = ordered_json;
 	json object, dict, rows, columns;
 	auto raw = json::parse(_json);
-	auto timestamp = raw["feed"]["updated"]["$t"];
-	_content->timestamp = timestamp.get<std::string>();
 	for (auto entry : raw["feed"]["entry"])
 	{
 		json row;
@@ -231,7 +229,6 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 		object["meta"]["dict"]["bytes"] = buffer.size();
 	}	
 	const int indent = _cfg.prettyPrint ? 1 : -1;
-	object["meta"]["time"] = _content->timestamp;
 	_content->payload = object.dump(indent);
 }
 }

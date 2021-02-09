@@ -55,7 +55,6 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id = nullptr);
 
 struct Content
 {
-	std::string timestamp;
 	std::string payload;
 };
 
