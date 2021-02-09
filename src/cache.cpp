@@ -68,6 +68,7 @@ FileImpl::FileImpl()
 
 void FileImpl::save(const std::string& _json, const Identifier& _id)
 {
+    using json = ordered_json;
     std::string name = _id.id + "_";
     name += std::to_string(_id.sheet);
     name += ".json";
@@ -81,6 +82,7 @@ void FileImpl::save(const std::string& _json, const Identifier& _id)
 
 void FileImpl::load(std::string& _content, const Identifier& _id) const
 {
+    using json = ordered_json;
     std::string name = _id.id + "_";
     name += std::to_string(_id.sheet);
     name += ".json";
