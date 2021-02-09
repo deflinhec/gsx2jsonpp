@@ -8,6 +8,7 @@ docker rm gsx2jsonpp
 # 3. launch container
 docker run -it -d -p 5000:8080 `
 -v ${PWD}\..\bin\volume:/workspace `
+-e ARGUMENTS="--host 0.0.0.0" `
 --name gsx2jsonpp gsx2jsonpp
 
 # 4. bash entry
