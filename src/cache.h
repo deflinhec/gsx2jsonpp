@@ -35,6 +35,8 @@ namespace Cache
 {
 struct Impl
 {
+    virtual ~Impl() {}
+
     virtual void save(const std::string& _json, const Identifier& _id) = 0;
 
     virtual void load(std::string& _content, const Identifier& _id) const = 0;
