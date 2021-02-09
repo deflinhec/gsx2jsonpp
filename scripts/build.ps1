@@ -10,3 +10,8 @@ cmake -DCMAKE_TOOLCHAIN_FILE='vcpkg\scripts\buildsystems\vcpkg.cmake' `
 
 # 3. cmake build
 cmake --build ..\build --config Release --target install
+
+# 4. run test
+Push-Location ..\build
+ctest -C Debug
+Pop-Location
