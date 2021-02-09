@@ -21,6 +21,7 @@
 */
 
 #include "utils.h"
+#include <openssl/md5.h>
 
 namespace Gxs2Json
 {
@@ -37,6 +38,20 @@ bool is_number(const std::string& _s)
 	strtod(_s.c_str(), &p);
 
 	return (*p == 0);
+}
+
+std::string md5(const std::string& _s)
+{
+	MD5_CTX ctx; MD5_Init(&ctx);
+	MD5_Update(&ctx, (unsigned char *)_s.data(), _s.size());
+	unsigned char md5[MD5_DIGEST_LENGTH]; MD5_Final(md5, &ctx);
+	std::string checksum; checksum.reserve(32);
+	for (std::size_t i = 0; i != 16; ++i)
+	{
+		checksum += "0123456789ABCDEF"[md5[i] / 16];
+		checksum += "0123456789ABCDEF"[md5[i] % 16];
+	}
+	return checksum;
 }
 
 }
