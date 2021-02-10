@@ -69,21 +69,6 @@ In this example below I'm going to use `5000` as port, and output log file under
       
     </details>
 
-    Avaliable arguments: 
-    - -p, --port
-    - --host 
-    - --cache (file|memory)
-
-      Cache mode is disabled by default, this feature allows client
-      to query on specific data version. When cache is configure with
-      file mode, cache file will be preserve under 'cache/' folder. 
-
-    - --ssl (true|false)
-
-      SSL mode is disabled by default, if you prefer using SSL mode
-      with your certification and private key. Copy your files into
-      `${PWD}/bin/volume` and rename as `cert.pem, key.pem`.
-
 After launched, Gsx2Jsonpp should be accessable in your browser [localhost:5000](http://localhost:5000/hi).
 
 Supervisor have been setup within the container to guarantee an auto restart after accidentially crashed(hopefully not).
@@ -152,7 +137,18 @@ http://example.com/api?id=SPREADSHEET_ID&sheet=SHEET_NUMBER
 
 - Make sure to add a left most column represents as an unique integer key.
 
-### :memo: Parameters
+
+## :rocket: Avaliable launch arguments:
+
+**-p, --port (default: 8080):** Depends on your network environment.
+
+**--host (default: localhost):** Depends on your network environment.
+
+**--cache ( file | memory | none - default: none):** This feature allows client to query on specific data version. When cache is configure with `file`, cache file will be preserve under `cache/` folder. In order to trigger an update, you will have to removes files under `cache/` folder manaually or restarts your container if configured with `memory`.
+
+**--ssl ( true | false - default: false):** Copy your certification and key into `${PWD}/bin/volume` and rename as `cert.pem, key.pem`. Self-signed certification will be auto generates if absent.
+
+## :memo: Parameters
 
 **id (required):** The ID of your document. This is the big long aplha-numeric code in the middle of your document URL.
 
