@@ -34,6 +34,18 @@ In this example below I'm going to use `5000` as port, and output log file under
     --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
     ```
 
+    <details>
+      <summary>Command line for Windows platform</summary>
+ 
+      ```
+      docker run -it -d --expose 5000 `
+      -v ${PWD}\bin\volume:/workspace `
+      -e ARGUMENTS="--host 0.0.0.0 --port 5000" `
+      --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
+      ```
+      
+    </details>
+
 - Launch with a local image
     
     Follow instructions below, :toolbox: Build from source.
@@ -48,6 +60,18 @@ In this example below I'm going to use `5000` as port, and output log file under
     -e ARGUMENTS="--host 0.0.0.0 --port 5000" \
     --name gsx2jsonpp gsx2jsonpp
     ```
+    
+    <details>
+      <summary>Command line for Windows platform</summary>
+ 
+      ```
+      docker run -it -d --expose 5000 `
+      -v ${PWD}\bin\volume:/workspace `
+      -e ARGUMENTS="--host 0.0.0.0 --port 5000" `
+      --name gsx2jsonpp gsx2jsonpp
+      ```
+      
+    </details>
 
     Avaliable arguments: 
     - -p, --port
@@ -87,11 +111,31 @@ Comparing to docker image, executable size will be way more smaller than using a
     bash scripts/build.sh
     ```
     
+    <details>
+      <summary>Command line for Windows platform</summary>
+ 
+      ```
+      cd scripts
+      .\build.ps1
+      ```
+      
+    </details>
+    
     - Launch with executable
         
         ```
         bin/Gsx2Jsonpp --host 0.0.0.0 -p 5000
         ```
+
+        <details>
+          <summary>Command line for Windows platform</summary>
+
+          ```
+          cd bin
+          .\Gsx2Jsonpp.exe --host 0.0.0.0 -p 5000
+          ```
+
+        </details>
 
 ## :label: Spreadsheet configuration
 
