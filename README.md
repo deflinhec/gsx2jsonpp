@@ -37,12 +37,10 @@ In this example below I'm going to use `5000` as port, and output log file under
     <details>
       <summary>Command line for Windows platform</summary>
  
-      ```
-      docker run -it -d --expose 5000 `
-      -v ${PWD}\bin\volume:/workspace `
-      -e ARGUMENTS="--host 0.0.0.0 --port 5000" `
-      --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
-      ```
+       docker run -it -d --expose 5000 `
+       -v ${PWD}\bin\volume:/workspace `
+       -e ARGUMENTS="--host 0.0.0.0 --port 5000" `
+       --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
       
     </details>
 
@@ -64,19 +62,16 @@ In this example below I'm going to use `5000` as port, and output log file under
     <details>
       <summary>Command line for Windows platform</summary>
  
-      ```
       docker run -it -d --expose 5000 `
       -v ${PWD}\bin\volume:/workspace `
       -e ARGUMENTS="--host 0.0.0.0 --port 5000" `
       --name gsx2jsonpp gsx2jsonpp
-      ```
       
     </details>
 
     Avaliable arguments: 
     - -p, --port
     - --host 
-
     - --cache (file|memory)
 
       Cache mode is disabled by default, this feature allows client
@@ -108,16 +103,13 @@ Comparing to docker image, executable size will be way more smaller than using a
     Avaliable argument: Release|Debug|Project (Default: Release)
     
     ```
-    bash scripts/build.sh
+    bash scripts/build.sh Release
     ```
     
     <details>
       <summary>Command line for Windows platform</summary>
  
-      ```
-      cd scripts
-      .\build.ps1
-      ```
+      Push-Location scripts; .\build.ps1; Pop-Location
       
     </details>
     
@@ -130,10 +122,7 @@ Comparing to docker image, executable size will be way more smaller than using a
         <details>
           <summary>Command line for Windows platform</summary>
 
-          ```
-          cd bin
-          .\Gsx2Jsonpp.exe --host 0.0.0.0 -p 5000
-          ```
+          Push-Location bin; .\Gsx2Jsonpp.exe --host 0.0.0.0 -p 5000; Pop-Location
 
         </details>
 
@@ -284,9 +273,9 @@ There are four sections to the returned data.
 
 ## :clipboard: TODO-List
 
-- :white_check_mark: docker image
+- :white_check_mark:  docker image
 
-- :white_check_mark: md5 checksum
+- :white_check_mark:  md5 checksum
 
-- :white_check_mark: cache
+- :white_check_mark:  cache
 
