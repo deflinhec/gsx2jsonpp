@@ -11,10 +11,8 @@ One useful feature of Google Spreadsheets is the ability to access the data as J
 
 This API connects to your spreadsheet and santizes the data, providing simple, readable JSON for you to use in your app.
 
-## :coffee: Donation
+## :coffee: [Buy me a coffee](https://ko-fi.com/deflinhec) 
 
-[buy me a coffee](https://ko-fi.com/deflinhec) 
- 
 ## :whale: Using docker image
 
 Make sure [docker engine](https://www.docker.com/products/docker-desktop) has already install in your operating-system.
@@ -181,90 +179,92 @@ There are four sections to the returned data.
 - Rows (containing each row of data as an object)
 - Meta (contains short brief of target data)
 
-```
-{
- "columns": {
-  "key": [
-   1,
-   2,
-   3,
-   4
-  ],
-  "column1": [
-   "1b",
-   "2b",
-   "3b",
-   "4b"
-  ],
-  "column2": [
-   11,
-   22,
-   33,
-   44
-  ]
- },
- "rows": [
+<details>
+  <summary>Returned data</summary>
+  <pre>
   {
-   "key": 1,
-   "column1": "1b",
-   "column2": 11
-  },
-  {
-   "key": 2,
-   "column1": "2b",
-   "column2": 22
-  },
-  {
-   "key": 3,
-   "column1": "3b",
-   "column2": 33
-  },
-  {
-   "key": 4,
-   "column1": "4b",
-   "column2": 44
+   "columns": {
+    "key": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "column1": [
+     "1b",
+     "2b",
+     "3b",
+     "4b"
+    ],
+    "column2": [
+     11,
+     22,
+     33,
+     44
+    ]
+   },
+   "rows": [
+    {
+     "key": 1,
+     "column1": "1b",
+     "column2": 11
+    },
+    {
+     "key": 2,
+     "column1": "2b",
+     "column2": 22
+    },
+    {
+     "key": 3,
+     "column1": "3b",
+     "column2": 33
+    },
+    {
+     "key": 4,
+     "column1": "4b",
+     "column2": 44
+    }
+   ],
+   "dict": {
+    "1": {
+     "key": 1,
+     "column1": "1b",
+     "column2": 11
+    },
+    "2": {
+     "key": 2,
+     "column1": "2b",
+     "column2": 22
+    },
+    "3": {
+     "key": 3,
+     "column1": "3b",
+     "column2": 33
+    },
+    "4": {
+     "key": 4,
+     "column1": "4b",
+     "column2": 44
+    }
+   },
+   "meta": {
+    "columns": {
+     "md5": "EAC2F0EF3EA62CEEDD3B65B627B06CBA",
+     "bytes": 73
+    },
+    "rows": {
+     "md5": "7767981744A818A7574B4A0B8EBE1C25",
+     "bytes": 153
+    },
+    "dict": {
+     "md5": "76C73EAEAFC8BA2ACD890C50E20C1613",
+     "bytes": 169
+    },
+    "time": "2021-02-07T20:00:04.552Z"
+   }
   }
- ],
- "dict": {
-  "1": {
-   "key": 1,
-   "column1": "1b",
-   "column2": 11
-  },
-  "2": {
-   "key": 2,
-   "column1": "2b",
-   "column2": 22
-  },
-  "3": {
-   "key": 3,
-   "column1": "3b",
-   "column2": 33
-  },
-  "4": {
-   "key": 4,
-   "column1": "4b",
-   "column2": 44
-  }
- },
- "meta": {
-  "columns": {
-   "md5": "EAC2F0EF3EA62CEEDD3B65B627B06CBA",
-   "bytes": 73
-  },
-  "rows": {
-   "md5": "7767981744A818A7574B4A0B8EBE1C25",
-   "bytes": 153
-  },
-  "dict": {
-   "md5": "76C73EAEAFC8BA2ACD890C50E20C1613",
-   "bytes": 169
-  },
-  "time": "2021-02-07T20:00:04.552Z"
- }
-}
-
-```
+  </pre>
+</details>
 
 
 ## :clipboard: TODO-List
