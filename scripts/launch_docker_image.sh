@@ -13,4 +13,4 @@ docker run -it -d -p 5000:8080 \
 --name gsx2jsonpp-latest deflinhec/gsx2jsonpp
 
 # 4. bash entry
-docker exec -it gsx2jsonpp bash
+docker exec -it gsx2jsonpp-latest bash
