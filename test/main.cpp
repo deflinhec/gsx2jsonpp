@@ -32,6 +32,8 @@
 using namespace httplib;
 using namespace nlohmann;
 
+static const char* SheetName = "worksheet1";
+static const char* ApiKey = "YOUR_GOOGLE_SHEET_API_KEY";
 static const char* SpreadsheetID = "1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4";
 
 TEST(SSLClient, GoogleSpreadSheet)
@@ -43,10 +45,11 @@ TEST(SSLClient, GoogleSpreadSheet)
 	ins.set_ca_cert_path(CA_CERT_FILE);
 	ins.enable_server_certificate_verification(true);
 	char url[BUFSIZ] = {0};
-	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, 1);
+	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res);
 	EXPECT_EQ(res->status, 200);
+	EXPECT_STREQ(res->reason.c_str(), "OK");
 	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
 	ASSERT_FALSE(res->body.empty());
 #endif
@@ -54,27 +57,30 @@ TEST(SSLClient, GoogleSpreadSheet)
 
 TEST(Client, GoogleSpreadSheet)
 {
-	Client ins(SPREADSHEET_HOST);
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+	SSLClient ins(SPREADSHEET_HOST);
 	char url[BUFSIZ] = {0};
-	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, 1);
+	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res);
 	EXPECT_EQ(res->status, 200);
+	EXPECT_STREQ(res->reason.c_str(), "OK");
 	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
 	ASSERT_FALSE(res->body.empty());
+#endif
 }
 
 TEST(URI, ParseIdentifier)
 {
 	char url[BUFSIZ] = {0};
-	const char* fmt = "/api?id=%s&sheet=%d";
-	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	const char* fmt = "/api?id=%s&sheet=%s&api_key=%s";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, SheetName, ApiKey);
 	using namespace Gsx2Json; Identifier id;
-	EXPECT_EQ(id.sheet, 1);
+	EXPECT_TRUE(id.sheet.empty());
 	EXPECT_TRUE(id.id.empty());
 	EXPECT_NO_THROW(parse(url, nullptr, &id));
 	EXPECT_STREQ(id.id.c_str(), SpreadsheetID);
-	EXPECT_EQ(id.sheet, 1);
+	EXPECT_STREQ(id.sheet.c_str(), SheetName);
 }
 
 TEST(URI, ParseConfigShowColumns)
@@ -135,24 +141,24 @@ TEST(URI, ParseConfigUseInteger)
 
 TEST(URI, ParseConfigQuerySearch)
 {
-	const char* url = "/api?q=aabb";
+	const char* url = "/api?q=cvvc";
 	using namespace Gsx2Json; Config config;
 	EXPECT_TRUE(config.query.empty());
 	EXPECT_NO_THROW(parse(url, &config));
-	EXPECT_STREQ(config.query.c_str(), "aabb");
+	EXPECT_STREQ(config.query.c_str(), "cvvc");
 }
 
 TEST(URI, ParseCompondQueries)
 {
 	char url[BUFSIZ] = {0};
 	const char* fmt =
-	"/api?q=aabb&integers=false&dict=false"
-	"&columns=false&rows=false&id=%s&sheet=%d"
-	"&pretty=true&meta=true";
-	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	"/api?q=cvvc&integers=false&dict=false"
+	"&columns=false&rows=false&id=%s&sheet=%s"
+	"&api_key=%s&pretty=true&meta=true";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, SheetName, ApiKey);
 	using namespace Gsx2Json;
 	Config config; Identifier id;
-	EXPECT_EQ(id.sheet, 1);
+	EXPECT_TRUE(id.sheet.empty());
 	EXPECT_TRUE(id.id.empty());
 	EXPECT_TRUE(config.showDict);
 	EXPECT_TRUE(config.showRows);
@@ -162,7 +168,7 @@ TEST(URI, ParseCompondQueries)
 	EXPECT_TRUE(config.useInteger);
 	EXPECT_TRUE(config.query.empty());
 	EXPECT_NO_THROW(parse(url, &config, &id));
-	EXPECT_EQ(id.sheet, 1);
+	EXPECT_STREQ(id.sheet.c_str(), SheetName);
 	EXPECT_STREQ(id.id.c_str(), SpreadsheetID);
 	EXPECT_FALSE(config.showDict);
 	EXPECT_FALSE(config.showRows);
@@ -170,7 +176,7 @@ TEST(URI, ParseCompondQueries)
 	EXPECT_FALSE(config.useInteger);
 	EXPECT_TRUE(config.briefMeta);
 	EXPECT_TRUE(config.prettyPrint);
-	EXPECT_STREQ(config.query.c_str(), "aabb");
+	EXPECT_STREQ(config.query.c_str(), "cvvc");
 }
 
 TEST(Number, LiteralNumber)
@@ -202,17 +208,20 @@ protected:
 
 void IOTests::SetUp()
 {
-	Client ins(SPREADSHEET_HOST);
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+	SSLClient ins(SPREADSHEET_HOST);
 	char url[BUFSIZ] = {0};
-	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, 1);
+	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res);
 	EXPECT_EQ(res->status, 200);
+	EXPECT_STREQ(res->reason.c_str(), "OK");
 	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
 	ASSERT_FALSE(res->body.empty());
 	EXPECT_NO_THROW(Object = json::parse(res->body));
 	std::ofstream output(filename);
 	output << Object;
+#endif
 }
 
 void IOTests::TearDown()
@@ -235,7 +244,7 @@ TEST_F(IOTests, LoadFromMemory)
 	using namespace Gsx2Json; 
 	Content content; 
 	Identifier id;
-	id.sheet = 1;
+	id.sheet = SheetName;
 	id.id = SpreadsheetID;
 	json object;
 	std::string gsxcontent;
@@ -261,7 +270,7 @@ TEST_F(IOTests, ThreadSafeLoadFromMemory)
         threads[i] = std::thread([&]{
 			Content content; 
 			Identifier id;
-			id.sheet = 1;
+			id.sheet = SheetName;
 			id.id = SpreadsheetID;
 			std::string gsxcontent;
 			json object;
@@ -283,7 +292,7 @@ TEST_F(IOTests, LoadFromFile)
 	using namespace Gsx2Json; 
 	Content content; 
 	Identifier id;
-	id.sheet = 1;
+	id.sheet = SheetName;
 	id.id = SpreadsheetID;
 	json object;
 	std::string gsxcontent;
@@ -309,7 +318,7 @@ TEST_F(IOTests, ThreadSafeLoadFromFile)
         threads[i] = std::thread([&]{
 			Content content; 
 			Identifier id;
-			id.sheet = 1;
+			id.sheet = SheetName;
 			id.id = SpreadsheetID;
 			std::string gsxcontent;
 			json object;
@@ -337,15 +346,18 @@ protected:
 
 void ParserTests::SetUp()
 {
-	Client ins(SPREADSHEET_HOST);
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+	SSLClient ins(SPREADSHEET_HOST);
 	char url[BUFSIZ] = {0};
-	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, 1);
+	snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res);
 	EXPECT_EQ(res->status, 200);
+	EXPECT_STREQ(res->reason.c_str(), "OK");
 	ASSERT_EQ(res->get_header_value("Content-Type"), "application/json; charset=UTF-8");
 	ASSERT_FALSE(res->body.empty());
 	GsxContent = res->body;
+#endif
 }
 
 TEST_F(ParserTests, ToJson)
@@ -360,8 +372,8 @@ TEST_F(ParserTests, RowCompactibility)
 {
 	Client ins("gsx2json.com");
 	char url[BUFSIZ] = {0};
-	const char* fmt = "/api?id=%s&sheet=%d&columns=false";
-	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	const char* fmt = "/api?id=%s&sheet=%s&api_key=%s&columns=false";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res) << "Connection failed";
     if (res->status == 200)
@@ -388,8 +400,8 @@ TEST_F(ParserTests, ColumnsCompactibility)
 {
 	Client ins("gsx2json.com");
 	char url[BUFSIZ] = {0};
-	const char* fmt = "/api?id=%s&sheet=%d&rows=false";
-	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	const char* fmt = "/api?id=%s&sheet=%s&api_key=%s&rows=false";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res) << "Connection failed";
     if (res->status == 200)
@@ -416,8 +428,8 @@ TEST_F(ParserTests, QueryCompactibility)
 {
 	Client ins("gsx2json.com");
 	char url[BUFSIZ] = {0};
-	const char* fmt = "/api?id=%s&sheet=%d&query=1b";
-	snprintf(url, sizeof(url), fmt, SpreadsheetID, 1);
+	const char* fmt = "/api?id=%s&sheet=%s&api_key=%s&q=123123";
+	snprintf(url, sizeof(url), fmt, SpreadsheetID, SheetName, ApiKey);
 	auto res = ins.Get(url);
 	ASSERT_TRUE(res) << "Connection failed";
     if (res->status == 200)

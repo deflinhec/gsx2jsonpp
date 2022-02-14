@@ -70,7 +70,7 @@ void FileImpl::save(const std::string& _json, const Identifier& _id)
 {
     using json = ordered_json;
     std::string name = _id.id + "_";
-    name += std::to_string(_id.sheet);
+    name += _id.sheet;
     name += ".json";
     const std::string filepath = Folder + name;
     
@@ -84,7 +84,7 @@ void FileImpl::load(std::string& _content, const Identifier& _id) const
 {
     using json = ordered_json;
     std::string name = _id.id + "_";
-    name += std::to_string(_id.sheet);
+    name += _id.sheet;
     name += ".json";
     const std::string filepath = Folder + name;
 
@@ -121,7 +121,7 @@ void FileImpl::flush()
 void MemoryImpl::save(const std::string& _json, const Identifier& _id)
 {
     std::string name = _id.id + "_";
-    name += std::to_string(_id.sheet);
+    name += _id.sheet;
     name += ".json";
     const auto idx = crc32(0, (const Bytef*)&name[0], (unsigned)name.size());
 
@@ -133,7 +133,7 @@ void MemoryImpl::save(const std::string& _json, const Identifier& _id)
 void MemoryImpl::load(std::string& _content, const Identifier& _id) const
 {
     std::string name = _id.id + "_";
-    name += std::to_string(_id.sheet);
+    name += _id.sheet;
     name += ".json";
     const auto idx = crc32(0, (const Bytef*)&name[0], (unsigned)name.size());
 

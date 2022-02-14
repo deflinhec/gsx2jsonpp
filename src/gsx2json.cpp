@@ -54,7 +54,11 @@ void parse(const std::string& _uri, Config* _cfg, Identifier* _id)
 		}
 		else if (_id && std::strcmp(query->key, "sheet") == 0)
 		{
-			_id->sheet = std::stoi(query->value);
+			_id->sheet = query->value;
+		}
+		else if (_id && std::strcmp(query->key, "api_key") == 0)
+		{
+			_id->apiKey = query->value;
 		}
 		else if (_cfg && std::strcmp(query->key, "integers") == 0)
 		{
@@ -93,63 +97,49 @@ void parse(Content* _content, const std::string& _json, Config _cfg)
 	using json = ordered_json;
 	json object, dict, rows, columns;
 	auto raw = json::parse(_json);
-	for (auto entry : raw["feed"]["entry"])
-	{
+
+	auto values = raw["values"];
+	auto it = values.begin();
+	auto headings = *it;
+	for (++it; it != values.end(); it++) {
 		json row;
+		auto entry = *it;
 		unsigned pkey = 0;
 		bool queried = _cfg.query.empty();
-		for (auto it = entry.begin(); it != entry.end(); it++)
-		{
-			// seek for actual data
-			if (it.key().rfind("gsx$", 0) == 0)
+		for (auto i = 0; i < headings.size(); i++) {
+			auto key = headings[i].get<std::string>();
+			// skip prefix with "NOEX_" (non export)
+			if (key.rfind("NOEX_", 0) == 0)
+				continue;
+			std::string value;
+			if (i < entry.size())
 			{
-				auto key = it.key();
-				key = key.substr(strlen("gsx$"));
-				// skip prefix with "noex" (non export)
-				if (key.rfind("noex", 0) == 0)
-					continue;
-				auto value = it.value()["$t"].get<std::string>();
-				if (is_number(value) && pkey == 0)
+				value = entry[i].get<std::string>();
+			}
+			if (is_number(value) && pkey == 0)
+			{
+				pkey = std::atoi(value.c_str());
+			}
+			if (!_cfg.query.empty())
+			{
+				queried |= key.rfind(_cfg.query, 0) >= 0;
+				queried |= value.rfind(_cfg.query, 0) >= 0;
+			}
+			row[key] = value;
+			if (_cfg.useInteger)
+			{
+				if (value.empty())
 				{
-					pkey = std::atoi(value.c_str());
+					row[key] = 0;
 				}
-				if (!_cfg.query.empty())
+				else if (is_number(value))
 				{
-					std::string lkey, lvalue, lquery;
-					std::transform(key.begin(), key.end(), lkey.begin(), ::tolower);
-					std::transform(value.begin(), value.end(), lvalue.begin(), ::tolower);
-					std::transform(_cfg.query.begin(), _cfg.query.end(), lquery.begin(), ::tolower);
-					queried |= lkey.rfind(lquery, 0) >= 0;
-					queried |= lvalue.rfind(lquery, 0) >= 0;
+					row[key] = std::stoi(value);
 				}
-				row[key] = value;
-				if (_cfg.useInteger)
-				{
-					if (value.empty())
-					{
-						row[key] = 0;
-					}
-					else if (is_number(value))
-					{
-						row[key] = std::stoi(value);
-					}
-				}
-				if (queried)
-				{
-					json jvalue = value;
-					if (_cfg.useInteger)
-					{
-						if (value.empty())
-						{
-							jvalue = 0;
-						}
-						else if (is_number(value))
-						{
-							jvalue = std::stoi(value);
-						}
-					}
-					columns[key].push_back(jvalue);
-				}
+			}
+			if (queried)
+			{
+				columns[key].push_back(row[key]);
 			}
 		}
 		if (queried)

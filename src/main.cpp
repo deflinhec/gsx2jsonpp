@@ -217,6 +217,15 @@ int main(int argc, char *argv[])
 		Config config; Identifier id;
 		try {
 			parse(req.target, &config, &id);
+			if (id.id.empty()) {
+				throw std::invalid_argument("You must provide a sheet ID");
+			}
+			if (id.sheet.empty()) {
+				throw std::invalid_argument("You must provide a sheet name");
+			}
+			if (id.apiKey.empty()) {
+				throw std::invalid_argument("You must provide an api key");
+			}
 		}
 		catch (const std::exception& e) {
 			res.set_content(e.what(), "text/plain");
@@ -225,9 +234,15 @@ int main(int argc, char *argv[])
 		std::string result;
 		if (!cache_manager || !cache_manager->load(result, id))
 		{
-			char buf[BUFSIZ];
-			snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, id.id.c_str(), id.sheet);
+			char buf[BUFSIZ] = {0};
+			snprintf(buf, sizeof(buf), SPREADSHEET_URI_FORMAT, 
+				id.id.c_str(), id.sheet.c_str(), id.apiKey.c_str());
+			std::cout << SPREADSHEET_HOST << buf << std::endl;
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+			SSLClient cli(SPREADSHEET_HOST);
+#else
 			Client cli(SPREADSHEET_HOST);
+#endif
 			if (auto res = cli.Get(buf))
 			{
 				if (res->status == 200)

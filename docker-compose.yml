@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  parser:
+    build:
+      context: .
+    volumes:
+      - ./bin/volume:/workspace
+    ports:
+      - 5000:8080

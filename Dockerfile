@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:latest as build
 LABEL maintainer "deflinhec <deflinhec@gmail.com>"
 
 RUN apk --no-cache add bash \
@@ -14,12 +14,19 @@ WORKDIR /project
 RUN export CC=gcc CXX=g++ && \
     /bin/bash scripts/build.sh Release
 
-EXPOSE 8080
-ENV TZ=Asia/Taipei \
-    ARGUMENTS="--host 0.0.0.0"
+FROM alpine:latest as staging
+COPY --from=build /project/bin/Gsx2Jsonpp /bin/Gsx2Jsonpp
 
-COPY supervisor.conf /etc/supervisor.conf
-CMD ["supervisord", "-c", "/etc/supervisor.conf"]
+RUN apk --no-cache add \
+    linux-headers \
+    libstdc++ \
+    libc-dev \
+    libressl-dev \
+	zlib-dev
+
+EXPOSE 8080
+ENV TZ=Asia/Taipei
 
 WORKDIR /workspace
-VOLUME /workspace
+ENTRYPOINT [ "/bin/Gsx2Jsonpp" ]
+CMD ["--host=0.0.0.0" , "--port=8080"]

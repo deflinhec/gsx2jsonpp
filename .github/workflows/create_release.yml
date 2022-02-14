@@ -44,6 +44,18 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
+      - name: Configure google api key
+        uses: jacobtomlinson/gha-find-replace@master
+        with:
+          find: "YOUR_GOOGLE_SHEET_API_KEY"
+          replace: ${{ secrets.GOOGLE_SHEET_API_KEY }}
+          include: "benchmark/main.cpp"
+      - name: Configure google api key
+        uses: jacobtomlinson/gha-find-replace@master
+        with:
+          find: "YOUR_GOOGLE_SHEET_API_KEY"
+          replace: ${{ secrets.GOOGLE_SHEET_API_KEY }}
+          include: "test/main.cpp"
       - name: Setup cmake and ninja
         uses: lukka/get-cmake@latest
       - name: Setup dependency

@@ -26,8 +26,8 @@
 #include <string>
 #include <vector>
 
-#define SPREADSHEET_HOST "spreadsheet.google.com"
-#define SPREADSHEET_URI_FORMAT "/feeds/list/%s/%d/public/values?alt=json"
+#define SPREADSHEET_HOST "sheets.googleapis.com"
+#define SPREADSHEET_URI_FORMAT "/v4/spreadsheets/%s/values/%s?key=%s"
 
 namespace Gsx2Json
 {
@@ -35,7 +35,8 @@ namespace Gsx2Json
 struct Identifier
 {
 	std::string id;
-	unsigned int sheet = 1;
+	std::string sheet;
+	std::string apiKey;
 };
 
 struct Config

@@ -26,6 +26,8 @@
 
 using namespace httplib;
 
+static const char* SheetName = "worksheet1";
+static const char* ApiKey = "YOUR_GOOGLE_SHEET_API_KEY";
 static const char* SpreadsheetID = "1-DGS8kSiBrPOxvyM1ISCxtdqWt-I7u1Vmcp-XksQ1M4";
 
 class ConfigFixture : public benchmark::Fixture 
@@ -35,9 +37,13 @@ public:
     {
         if (GsxContent.empty())
         {
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+            SSLClient ins(SPREADSHEET_HOST);
+#else
             Client ins(SPREADSHEET_HOST);
+#endif
             char url[BUFSIZ] = {0};
-            snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, 1);
+            snprintf(url, sizeof(url), SPREADSHEET_URI_FORMAT, SpreadsheetID, SheetName, ApiKey);
             auto res = ins.Get(url);
             GsxContent = res->body;
         }
